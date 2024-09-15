@@ -1,5 +1,5 @@
 ## Global notes:
-- I'm using [NoIP](https://my.noip.com/dynamic-dns) as my dns
+- I'm using [NoIP](https://my.noip.com/dynamic-dns) as my dns provider
 
 
 ## Day to day:
