@@ -16,4 +16,4 @@
 9/15/2024
 - Lets encrypt can force all http connections to become https if configured. (HSTS) is a security HTTP header to make sure the connection has the cert, otherwise it will terminate it.
 - Certbot will use port 80 to validate the certificate (I belive you must be running apache or something to obtain it)
-- Install certbot: [Certbot Install instructions](https://www.inmotionhosting.com/support/website/ssl/lets-encrypt-ssl-ubuntu-with-certbot/#create)
+- Certbot: [Install/Run instructions](https://www.inmotionhosting.com/support/website/ssl/lets-encrypt-ssl-ubuntu-with-certbot/#create). I'm using the snapd install
