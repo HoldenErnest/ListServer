@@ -9,3 +9,4 @@
 
 9/15/2024
 - Lets encrypt can force all http connections to become https. (HSTS) is a security HTTP header to make sure the connection has the cert, otherwise it will terminate it.
+- Install certbot: [Certbot Install instructions](https://www.inmotionhosting.com/support/website/ssl/lets-encrypt-ssl-ubuntu-with-certbot/#create)
