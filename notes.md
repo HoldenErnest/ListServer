@@ -24,3 +24,4 @@
 - `ssh-keygen -t ed25519` - from a local machine(not server) I can do this to generate the keys in ed25519 format
 - copy `~/.ssh/theKeyFile.pub` to the end of the servers file `~/.ssh/authorized_keys"`. Make sure this file has only 600(r/w) perms
 - never save private key on the server, private key will be on the clients that are not open to the internet.
+- Disabled password login(use only keys). Within `ssh/sshd_config` AND `ssh/sshd_config.d/50-cloud-init.conf` set `PasswordAuthentication no`
