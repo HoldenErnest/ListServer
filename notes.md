@@ -27,3 +27,4 @@
 - Disabled password login(use only keys). Within `ssh/sshd_config` AND `ssh/sshd_config.d/50-cloud-init.conf` set `PasswordAuthentication no`. Then run `service ssh restart` to enable the changes
 More Today--
 - Installed apache. Web pages are in `var/www/` you will need to setup a VirtualHost as well as configurations found in `etc/apache2/`
+- Forwarding port 80 will allow the default web page to run - find out more about how to run processes and change url later.
