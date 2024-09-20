@@ -5,5 +5,6 @@ Read [notes](notes.md) for more information on startup of the System as a whole
 
 ## Goals:
 - get ssh working ✔
-- get certbot working
-- get apache working?
+- get certbot working ✔
+- get apache working? ✔
+- generate a working ssl socket / client that can connect to this
