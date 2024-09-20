@@ -29,8 +29,9 @@ More Today--
 - Installed apache. Web pages are in `var/www/` you will need to setup a VirtualHost as well as configurations found in `etc/apache2/`
 - Forwarding port 80 will allow the default web page to run - find out more about how to run processes and change url later.
 
-9/19/2024
+[9/19/2024
 - Finished apache setup and got the ssl certification using the certbot install instructions listed previously. (it was fairly easy)
 - https is on port 443 so I enabled that. dont disable port 80, it will be automatically redirected to https
 - Started a neat website structure for fun and eventually create a download page for this project. :: [webserver](https://github.com/HoldenErnest/webserver)
 - You can disable certain files and directories from being served by editing `etc/apache2/apache2.conf`. You can look at a list of these [config options](https://httpd.apache.org/docs/current/mod/core.html#directory) for more info. Remeber to `service apache2 restart` for changes to take.
+](https://HoldenErnest@github.com)
