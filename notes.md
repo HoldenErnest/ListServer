@@ -33,4 +33,4 @@ More Today--
 - Finished apache setup and got the ssl certification using the certbot install instructions listed previously. (it was fairly easy)
 - https is on port 443 so I enabled that and disabled port 80 since all http traffic should be rerouted to https.
 - Started a neat website structure for fun and eventually create a download page for this project. :: [webserver](https://github.com/HoldenErnest/webserver)
-- 
+- You can disable certain files and directories from being served by editing `etc/apache2/apache2.conf`. You can look at a list of these [config options](https://httpd.apache.org/docs/current/mod/core.html#directory) for more info.
