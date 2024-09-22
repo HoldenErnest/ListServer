@@ -8,3 +8,4 @@ Read [notes](notes.md) for more information on startup of the System as a whole
 - get certbot working ✔
 - get apache working? ✔
 - generate a working ssl socket / client that can connect to this
+more
