@@ -37,3 +37,6 @@ More Today--
 
 9/20/2024
 - Looked into creating ssl sockets for cpp. [sslsocket option](https://github.com/embeddedmz/socket-cpp)
+
+9/22/2024
+- Another option may be [LibreSSL](https://www.libressl.org/) which seems like a better fork of OpenSSL, however im unsure if it is C only or CPP compatable
