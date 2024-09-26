@@ -40,3 +40,6 @@ More Today--
 
 9/22/2024
 - Another option may be [LibreSSL](https://www.libressl.org/) which seems like a better fork of OpenSSL, however im unsure if it is C only or CPP compatable
+
+9/23/2024
+- Setup ssh keypair for git: [generate a key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) then copy to github
