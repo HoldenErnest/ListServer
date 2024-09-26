@@ -43,3 +43,7 @@ More Today--
 
 9/23/2024
 - Setup ssh keypair for git: [generate a key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) then copy to github
+
+9/26/2024
+- Looked into a Java alternative, it seems like there is more documentation for Javas SSL sockets as seen [here](https://docs.oracle.com/javase/10/security/sample-code-illustrating-secure-socket-connection-client-and-server.htm#JSSEC-GUID-B1060A74-9BAE-40F1-AB2B-C8D83812A4C7)
+- [HTTP versions and format](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP)
