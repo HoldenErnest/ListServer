@@ -42,7 +42,7 @@ More Today--
 - Another option may be [LibreSSL](https://www.libressl.org/) which seems like a better fork of OpenSSL, however im unsure if it is C only or CPP compatable
 
 9/23/2024
-- Setup ssh keypair for git: [generate a key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) then copy to github
+- Setup ssh keypair for git: `ssh-keygen -t ed25519 -C "your_email@example.com"` found [here](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) then copy to github
 
 9/26/2024
 - Looked into a Java alternative, it seems like there is more documentation for Javas SSL sockets as seen [here](https://docs.oracle.com/javase/10/security/sample-code-illustrating-secure-socket-connection-client-and-server.htm#JSSEC-GUID-B1060A74-9BAE-40F1-AB2B-C8D83812A4C7)
