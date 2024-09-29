@@ -117,16 +117,14 @@ public class ClassFileServer extends ClassServer {
                 SSLContext ctx;
                 KeyManagerFactory kmf;
                 KeyStore ks;
-                char[] passphrase = "key_store".toCharArray(); // CHANGE THIS TO THE CERT PASSWORD?
+                char[] passphrase = "anewkey".toCharArray(); // password for the Java Keystore (not that important)
 
                 ctx = SSLContext.getInstance("TLS");
                 kmf = KeyManagerFactory.getInstance("SunX509");
-                ks = KeyStore.getInstance("JKS");
+                ks = KeyStore.getInstance("JKS"); // make a keystore of type .jks
 
-                ks.load(new FileInputStream("cert/cacerts.jks"), passphrase); // 'testkeys' IS WHERE THE KEY IS STORED ---- you can use the `keytool` utility to change this?
-                System.out.println("accessing the file");
+                ks.load(new FileInputStream("cert/server.keystore"), passphrase); // load the keystore from a file, a password is needed to use it
                 kmf.init(ks, passphrase);
-                System.out.println("done accessing the file");
                 ctx.init(kmf.getKeyManagers(), null, null);
 
                 ssf = ctx.getServerSocketFactory();
