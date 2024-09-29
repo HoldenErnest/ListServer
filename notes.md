@@ -51,3 +51,6 @@ More Today--
 6/29/2024
 - Learned about javas keystore system, keystores store ssl certs (.pem keys will have to be converted before theyre able to be added). [Java generate self-signed key](https://docs.oracle.com/cd/E19798-01/821-1841/gjrgy/)
 - This might be what im looking for: [X509 public cert private key](https://stackoverflow.com/questions/22950226/java-how-to-make-ssl-connection-with-public-certificate-and-private-key)
+- package both in the same file (it will ask you to input an export password)(make sure you have read perms): `openssl pkcs12 -export -inkey privkey.pem -in cert.pem -out bothAsPKCS12.p12 -CAfile chain.pem -chain`
+- chain certificates allow the certificate to almost be passed along domains, so it would include letsencrypt as a chain
+- import that file into a java keystore: `keytool -importkeystore -deststorepass [changeit] -destkeypass [changeit] -destkeystore server.keystore -srckeystore server.p12 -srcstoretype PKCS12 -srcstorepass [changeit]`
