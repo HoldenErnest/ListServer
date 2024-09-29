@@ -47,3 +47,9 @@ More Today--
 9/26/2024
 - Looked into a Java alternative, it seems like there is more documentation for Javas SSL sockets as seen [here](https://docs.oracle.com/javase/10/security/sample-code-illustrating-secure-socket-connection-client-and-server.htm#JSSEC-GUID-B1060A74-9BAE-40F1-AB2B-C8D83812A4C7)
 - [HTTP versions and format](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP)
+
+6/29/2024
+- Learned about javas keystore system, keystores store ssl certs (.pem keys will have to be converted before theyre able to be added). [Java generate self-signed key](https://docs.oracle.com/cd/E19798-01/821-1841/gjrgy/)
+- to convert and import existing `.pem` file, [look at this](https://stackoverflow.com/questions/2138940/import-pem-into-java-key-store).
+- `cd ListServer` `openssl x509 -outform der -in /etc/letsencrypt/live/jacob.serveminecraft.net/privkey.pem -out cacert.der` `keytool -import -alias jacob.serveminecraft.net -keystore cacerts.jks -file cacert.der`
+- 
