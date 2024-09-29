@@ -50,6 +50,4 @@ More Today--
 
 6/29/2024
 - Learned about javas keystore system, keystores store ssl certs (.pem keys will have to be converted before theyre able to be added). [Java generate self-signed key](https://docs.oracle.com/cd/E19798-01/821-1841/gjrgy/)
-- to convert and import existing `.pem` file, [look at this](https://stackoverflow.com/questions/2138940/import-pem-into-java-key-store).
-- `cd ListServer` `openssl x509 -outform der -in /etc/letsencrypt/live/jacob.serveminecraft.net/privkey.pem -out cacert.der` `keytool -import -alias jacob.serveminecraft.net -keystore cacerts.jks -file cacert.der`
-- 
+- This might be what im looking for: [X509 public cert private key](https://stackoverflow.com/questions/22950226/java-how-to-make-ssl-connection-with-public-certificate-and-private-key)
