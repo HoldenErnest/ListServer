@@ -117,14 +117,16 @@ public class ClassFileServer extends ClassServer {
                 SSLContext ctx;
                 KeyManagerFactory kmf;
                 KeyStore ks;
-                char[] passphrase = "changeit".toCharArray(); // CHANGE THIS TO THE CERT PASSWORD?
+                char[] passphrase = "key_store".toCharArray(); // CHANGE THIS TO THE CERT PASSWORD?
 
                 ctx = SSLContext.getInstance("TLS");
                 kmf = KeyManagerFactory.getInstance("SunX509");
                 ks = KeyStore.getInstance("JKS");
 
-                ks.load(new FileInputStream("testkeys"), passphrase); // 'testkeys' IS WHERE THE KEY IS STORED ---- you can use the `keytool` utility to change this?
+                ks.load(new FileInputStream("cert/cacerts.jks"), passphrase); // 'testkeys' IS WHERE THE KEY IS STORED ---- you can use the `keytool` utility to change this?
+                System.out.println("accessing the file");
                 kmf.init(ks, passphrase);
+                System.out.println("done accessing the file");
                 ctx.init(kmf.getKeyManagers(), null, null);
 
                 ssf = ctx.getServerSocketFactory();
