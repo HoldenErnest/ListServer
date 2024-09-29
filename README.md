@@ -7,5 +7,5 @@ Read [notes](notes.md) for more information on startup of the System as a whole
 - get ssh working ✔
 - get certbot working ✔
 - get apache working? ✔
-- generate a working ssl socket / client that can connect to this
-more
+- generate a working ssl socket ✔
+- generate a client in js that can connect to this
