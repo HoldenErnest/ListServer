@@ -54,3 +54,25 @@ More Today--
 - package both in the same file (it will ask you to input an export password)(make sure you have read perms): `openssl pkcs12 -export -inkey privkey.pem -in cert.pem -out bothAsPKCS12.p12 -CAfile chain.pem -chain`
 - chain certificates allow the certificate to almost be passed along domains, so it would include letsencrypt as a chain
 - import that file into a java keystore: `keytool -importkeystore -deststorepass [changeit] -destkeypass [changeit] -destkeystore server.keystore -srckeystore server.p12 -srcstoretype PKCS12 -srcstorepass [changeit]`
+
+10/2/2024
+- its impossibly simple to create an https server using js.
+```
+const https = require('node:https');
+const fs = require('node:fs');
+
+const options = {
+  key: fs.readFileSync('private-key.pem'),
+  cert: fs.readFileSync('certificate.pem'),
+};
+
+https.createServer(options, (req, res) => {
+  res.writeHead(200);
+  res.end('hello world\n');
+}).listen(8000);
+```
+- so if needed I can rework the server to be JS as backend(gross). But at least I wouldnt have to worry about the key needing to be converted(for when it needs to be renewed).
+- [JS HTTPS client](https://nodejs.org/docs/latest/api/https.html#https_https_get_options_callback)
+- To test I will portforward to the server from my PC only and use localhost (so as to not allow security issues while learning about the correct ways to implement it)
+- With this I should be able to get a back and forth communication going, it should look like this:
+- Created [communicationDiagram.drawio](/communicationDiagram.drawio)
