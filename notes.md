@@ -76,3 +76,6 @@ https.createServer(options, (req, res) => {
 - To test I will portforward to the server from my PC only and use localhost (so as to not allow security issues while learning about the correct ways to implement it)
 - With this I should be able to get a back and forth communication going, it should look like this:
 - Created [communicationDiagram.drawio](/communicationDiagram.drawio)
+
+10/3/2024
+- Created a Client in JS that connects to the ListServer, the list server also collects this data and the IP connection
