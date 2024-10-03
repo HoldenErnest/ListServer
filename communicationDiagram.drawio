@@ -1,0 +1,151 @@
+<mxfile host="65bd71144e">
+    <diagram id="nOQW177BidjiD76-JMUg" name="Page-1">
+        <mxGraphModel dx="1637" dy="721" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="36" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="90" y="80" width="590" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="" style="whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="36">
+                    <mxGeometry width="590" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="Send/Save List" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;" vertex="1" parent="36">
+                    <mxGeometry x="30" y="15" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="" style="group" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="440" y="160" width="215" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Server" style="whiteSpace=wrap;html=1;" parent="10" vertex="1">
+                    <mxGeometry width="215" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="&lt;br&gt;&lt;br&gt;Check for user in db&lt;br&gt;Send error if not found&lt;br&gt;Continue if found&lt;br&gt;Find list, Check if user has perms&lt;br&gt;Send error if insufficient perms&lt;br&gt;Continue if found&lt;br&gt;Backup old list&lt;br&gt;Save listData as the list&lt;br&gt;Send Success&lt;br&gt;Close Connection" style="whiteSpace=wrap;html=1;verticalAlign=top;align=left;" parent="10" vertex="1">
+                    <mxGeometry y="30" width="215" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="" style="group" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="110" y="160" width="235" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="Client" style="whiteSpace=wrap;html=1;" parent="11" vertex="1">
+                    <mxGeometry width="235" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Start Connection&lt;/span&gt;&lt;/div&gt;Send user/password + &quot;save&quot; + listData&lt;br&gt;&lt;br&gt;&lt;br&gt;Error: User not found (relogin)&lt;br&gt;&lt;br&gt;&lt;br&gt;Error: Denied access&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;Success: File Saved" style="whiteSpace=wrap;html=1;verticalAlign=top;align=right;" parent="11" vertex="1">
+                    <mxGeometry y="30" width="235" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" style="edgeStyle=none;html=1;exitX=1.003;exitY=0.158;exitDx=0;exitDy=0;entryX=0.004;entryY=0.218;entryDx=0;entryDy=0;exitPerimeter=0;entryPerimeter=0;" parent="1" source="6" target="7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" style="edgeStyle=none;html=1;exitX=-0.013;exitY=0.305;exitDx=0;exitDy=0;entryX=1.019;entryY=0.379;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" parent="1" source="7" target="6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="All lists have metadata files, which includes the users that can access it / write/read perms" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="720" y="200" width="120" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" style="edgeStyle=none;html=1;entryX=1.015;entryY=0.608;entryDx=0;entryDy=0;entryPerimeter=0;exitX=-0.009;exitY=0.539;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="7" target="6" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="430" y="300" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="17" style="edgeStyle=none;html=1;exitX=-0.013;exitY=0.815;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.015;entryY=0.898;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="7" target="6">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="350" y="360" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="18" value="Any Error: Close connection to client" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="487.5" y="100" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="90" y="430" width="590" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="" style="whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="22">
+                    <mxGeometry width="590" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="Load List" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;" vertex="1" parent="22">
+                    <mxGeometry x="20" y="15" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="440" y="510" width="215" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="Server" style="whiteSpace=wrap;html=1;" vertex="1" parent="25">
+                    <mxGeometry width="215" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="&lt;br&gt;&lt;br&gt;Check for user in db&lt;br&gt;Send error if not found&lt;br&gt;Continue if found&lt;br&gt;Find list, Check if user has perms&lt;br&gt;Send error if insufficient perms&lt;br&gt;Continue if found&lt;br&gt;Send listData&lt;br&gt;Close Connection" style="whiteSpace=wrap;html=1;verticalAlign=top;align=left;" vertex="1" parent="25">
+                    <mxGeometry y="30" width="215" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="110" y="510" width="235" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="Client" style="whiteSpace=wrap;html=1;" vertex="1" parent="28">
+                    <mxGeometry width="235" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="Start Connection&lt;br&gt;Send user/password + &quot;load&quot; + listID&lt;br&gt;&lt;br&gt;&lt;br&gt;Error: User not found (relogin)&lt;br&gt;&lt;br&gt;&lt;br&gt;Error: Denied access&lt;br&gt;&lt;br&gt;Load List accordingly&lt;br&gt;&lt;div style=&quot;&quot;&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;verticalAlign=top;align=right;" vertex="1" parent="28">
+                    <mxGeometry y="30" width="235" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" style="edgeStyle=none;html=1;exitX=1.003;exitY=0.158;exitDx=0;exitDy=0;entryX=0.004;entryY=0.218;entryDx=0;entryDy=0;exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="30" target="27">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" style="edgeStyle=none;html=1;exitX=-0.013;exitY=0.305;exitDx=0;exitDy=0;entryX=1.019;entryY=0.379;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" edge="1" parent="1" source="27" target="30">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" style="edgeStyle=none;html=1;entryX=1.015;entryY=0.608;entryDx=0;entryDy=0;entryPerimeter=0;exitX=-0.009;exitY=0.539;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="27" target="30">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="430" y="650" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="34" style="edgeStyle=none;html=1;exitX=-0.017;exitY=0.692;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="27" target="30">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="340" y="780" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="35" value="Any Error: Close connection to client" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="487.5" y="450" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="90" y="780" width="590" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="" style="whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="38">
+                    <mxGeometry width="590" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="Allow User" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;" vertex="1" parent="38">
+                    <mxGeometry x="10" y="15" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="440" y="860" width="230" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="Server" style="whiteSpace=wrap;html=1;" vertex="1" parent="41">
+                    <mxGeometry width="229.99999999999997" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="&lt;br&gt;&lt;br&gt;Check for both users in db&lt;br&gt;Send error if either not found&lt;br&gt;Continue if found&lt;br&gt;Find list, Check if user is OWNER&lt;br&gt;Send error if not owner&lt;br&gt;Continue if found&lt;br&gt;Update the metadata for the list&lt;br&gt;Send Success&lt;br&gt;Close Connection" style="whiteSpace=wrap;html=1;verticalAlign=top;align=left;" vertex="1" parent="41">
+                    <mxGeometry y="30" width="229.99999999999997" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="100" y="860" width="290" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="Client" style="whiteSpace=wrap;html=1;" vertex="1" parent="44">
+                    <mxGeometry width="290.0000000000001" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="Start Connection&lt;br&gt;Send user/password + &quot;allow&quot; + listID + user + perms&lt;br&gt;&lt;br&gt;&lt;br&gt;Error: User not found (relogin or check spell)&lt;br&gt;&lt;br&gt;&lt;br&gt;Error: Denied, you dont own this list&lt;br&gt;&lt;br&gt;&lt;br&gt;Success: updated perms&lt;br&gt;&lt;div style=&quot;&quot;&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;verticalAlign=top;align=right;" vertex="1" parent="44">
+                    <mxGeometry y="30" width="290.0000000000001" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" style="edgeStyle=none;html=1;exitX=1.003;exitY=0.158;exitDx=0;exitDy=0;entryX=0.004;entryY=0.218;entryDx=0;entryDy=0;exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="46" target="43">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" style="edgeStyle=none;html=1;exitX=-0.013;exitY=0.305;exitDx=0;exitDy=0;entryX=1.019;entryY=0.379;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" edge="1" parent="1" source="43" target="46">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" style="edgeStyle=none;html=1;entryX=1.015;entryY=0.608;entryDx=0;entryDy=0;entryPerimeter=0;exitX=-0.009;exitY=0.539;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="43" target="46">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="430" y="1000" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="50" style="edgeStyle=none;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1.006;entryY=0.83;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="43" target="46">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="340" y="1130" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="51" value="Any Error: Close connection to client" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="487.5" y="800" width="120" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
