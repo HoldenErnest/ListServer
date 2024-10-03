@@ -1,58 +1,70 @@
+// Holden Ernest - 6/29/2024
+// Based off Oracles Docs
+// https://docs.oracle.com/javase/10/security/sample-code-illustrating-secure-socket-connection-client-and-server.htm#JSSEC-GUID-3561ED02-174C-4E65-8BB1-5995E9B7282C
+
+/* 
+ * This file takes in a Server socket then accepts connections on it.
+ * On a connection it will parse the recieved information to determine
+ * what actions the server needs to take.
+ * 
+ * Read more about the Project:
+ * https://github.com/HoldenErnest/ListServer
+ * 
+ * The 3 interactions that can occur:
+ * Save - save a list to the server
+ * Load - load a list from the server
+ * Update - change perms of a list
+ */
+
 import java.io.*;
 import java.net.*;
 import javax.net.*;
-
-/*
- * ClassServer.java -- a simple file server that can serve
- * Http get request in both clear and secure channel
- */
+import java.util.Date;
 
 public abstract class ClassServer implements Runnable {
 
     private ServerSocket server = null;
-    /**
-     * Constructs a ClassServer based on <b>ss</b> and
-     * obtains a file's bytecodes using the method <b>getBytes</b>.
-     *
-     */
-    protected ClassServer(ServerSocket ss)
+    private BufferedWriter log;
+
+    protected ClassServer(ServerSocket ss) // this is only called once to accept the first connection
     {
         server = ss;
+        
+        try {
+            log = new BufferedWriter(new FileWriter("log", true));
+        } catch (Exception e) {
+            System.out.println("Problem Setting up log file");
+        }
+
         newListener();
+        System.out.println("[LIVE] Awaiting Connection..");
+        
     }
 
-    /**
-     * Returns an array of bytes containing the bytes for
-     * the file represented by the argument <b>path</b>.
-     *
-     * @return the bytes for the file
-     * @exception FileNotFoundException if the file corresponding
-     * to <b>path</b> could not be loaded.
-     * @exception IOException if error occurs reading the class
-     */
-    public abstract byte[] getBytes(String path)
-        throws IOException, FileNotFoundException;
+    public abstract byte[] getBytes(String path) throws IOException, FileNotFoundException;
 
-    /**
-     * The "listen" thread that accepts a connection to the
-     * server, parses the header to obtain the file name
-     * and sends back the bytes for the file (or error
-     * if the file is not found or the response was malformed).
-     */
+    // Event on new thread creation
     public void run()
     {
         Socket socket;
+        InetAddress srcAddr;
+        int srcPort;
 
         // accept a connection
         try {
-            socket = server.accept();
+            socket = server.accept(); // wait for a connection
+            srcAddr = socket.getInetAddress();
+            srcPort = socket.getLocalPort();
+
+
+            log("Connection: " + srcAddr + ":" + srcPort);
         } catch (IOException e) {
-            System.out.println("Class Server died: " + e.getMessage());
+            System.out.println("Server died: " + e.getMessage());
             e.printStackTrace();
             return;
         }
 
-        // create a new thread to accept the next connection
+        // create a new thread to wait for if there are any more connections
         newListener();
 
         try {
@@ -68,16 +80,16 @@ public abstract class ClassServer implements Runnable {
                     new BufferedReader(
                         new InputStreamReader(socket.getInputStream()));
                 String path = getPath(in);
-                // retrieve bytecodes
-                byte[] bytecodes = getBytes(path);
+                // retrieve data from the file
+                byte[] data = getBytes(path);
                 // send bytecodes in response (assumes HTTP/1.0 or later)
                 try {
                     out.print("HTTP/1.0 200 OK\r\n");
-                    out.print("Content-Length: " + bytecodes.length +
+                    out.print("Content-Length: " + data.length +
                                    "\r\n");
                     out.print("Content-Type: text/html\r\n\r\n");
                     out.flush();
-                    rawOut.write(bytecodes);
+                    rawOut.write(data);
                     rawOut.flush();
                 } catch (IOException ie) {
                     ie.printStackTrace();
@@ -102,6 +114,7 @@ public abstract class ClassServer implements Runnable {
             try {
                 socket.close();
             } catch (IOException e) {
+                
             }
         }
     }
@@ -118,10 +131,9 @@ public abstract class ClassServer implements Runnable {
      * Returns the path to the file obtained from
      * parsing the HTML header.
      */
-    private static String getPath(BufferedReader in)
-        throws IOException
-    {
+    private static String getPath(BufferedReader in) throws IOException {
         String line = in.readLine();
+        System.out.println("read line: " + line);
         String path = "";
         // extract class from GET line
         if (line.startsWith("GET /")) {
@@ -135,8 +147,8 @@ public abstract class ClassServer implements Runnable {
         // eat the rest of header
         do {
             line = in.readLine();
-        } while ((line.length() != 0) &&
-                 (line.charAt(0) != '\r') && (line.charAt(0) != '\n'));
+            System.out.println("read line: " + line);
+        } while ((line.length() != 0) && (line.charAt(0) != '\r') && (line.charAt(0) != '\n'));
 
         if (path.length() != 0) {
             return path;
@@ -144,4 +156,19 @@ public abstract class ClassServer implements Runnable {
             throw new IOException("Malformed Header");
         }
     }
+    
+    private void log(String s) {
+        try {
+            Date date = new Date();
+            log.append("\r\n");
+            log.append("["+ date + "] ");
+            log.append(s);
+            // lock
+            log.flush();
+            // unlock
+        } catch (Exception e) {
+            System.out.println("problem Logging: " + e);
+        }
+    }
+
 }

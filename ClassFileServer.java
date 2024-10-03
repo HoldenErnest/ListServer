@@ -1,18 +1,17 @@
+// Holden Ernest - 6/29/2024
+// Based off Oracles Docs
+// https://docs.oracle.com/javase/10/security/sample-code-illustrating-secure-socket-connection-client-and-server.htm#JSSEC-GUID-3561ED02-174C-4E65-8BB1-5995E9B7282C
+
+/* 
+ * This file starts up a secure socket then forwards it to ClassServer.java to handle the connections
+ */
+
 import java.io.*;
 import java.net.*;
 import java.security.KeyStore;
 import javax.net.*;
 import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
-
-/* ClassFileServer.java -- a simple file server that can server
- * Http get request in both clear and secure channel
- *
- * The ClassFileServer implements a ClassServer that
- * reads files from the file system. See the
- * doc for the "Main" method for how to run this
- * server.
- */
 
 public class ClassFileServer extends ClassServer {
 
@@ -69,41 +68,34 @@ public class ClassFileServer extends ClassServer {
      * <code>   new ClassFileServer(port, docroot);
      * </code>
      */
-    public static void main(String args[])
-    {
-        System.out.println(
-            "USAGE: java ClassFileServer port docroot [TLS [true]]");
+    public static void main(String args[]) {
+        // "Start as: java ClassFileServer port docroot TLS"
         System.out.println("");
-        System.out.println(
-            "If the third argument is TLS, it will start as\n" +
-            "a TLS/SSL file server, otherwise, it will be\n" +
-            "an ordinary file server. \n" +
-            "If the fourth argument is true,it will require\n" +
-            "client authentication as well.");
-
+        System.out.println("[Server Setup] Initializing Lupu List Server..");
+        System.out.println("");
         int port = DefaultServerPort;
         String docroot = "";
-
         if (args.length >= 1) {
             port = Integer.parseInt(args[0]);
         }
-
         if (args.length >= 2) {
             docroot = args[1];
         }
-        String type = "PlainSocket"; // Set to "TLS"
+        String type = "PlainSocket"; // Make sure this is "TLS"
         if (args.length >= 3) {
             type = args[2];
         }
         try {
+            System.out.println("[Server Setup] Setting up Secure Socket..");
             ServerSocketFactory ssf = ClassFileServer.getServerSocketFactory(type);
             ServerSocket ss = ssf.createServerSocket(port); // create serverSocket with the specifications from ssf
-            if (args.length >= 4 && args[3].equals("true")) {
-                ((SSLServerSocket)ss).setNeedClientAuth(true);
-            }
-            new ClassFileServer(ss, docroot); // When you create this Object the Super (ClassServer) will handle the rest
+
+            // When you create this Object, the Super (ClassServer) will handle the rest (multithreading and whatnot)
+            System.out.println("[Server Setup] Successfully Setup");
+            new ClassFileServer(ss, docroot);
+
         } catch (IOException e) {
-            System.out.println("Unable to start ClassServer: " +
+            System.out.println("[Server Setup] Unable to start ClassServer: " +
                                e.getMessage());
             e.printStackTrace();
         }
