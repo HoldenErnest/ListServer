@@ -12,6 +12,7 @@ import java.security.KeyStore;
 import javax.net.*;
 import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
+import java.util.Scanner;
 
 public class ClassFileServer extends ClassServer {
 
@@ -69,6 +70,7 @@ public class ClassFileServer extends ClassServer {
      * </code>
      */
     public static void main(String args[]) {
+        Scanner cin = new Scanner(System.in);
         // "Start as: java ClassFileServer port docroot TLS"
         System.out.println("");
         System.out.println("[Server Setup] Initializing Lupu List Server..");
@@ -95,9 +97,17 @@ public class ClassFileServer extends ClassServer {
             new ClassFileServer(ss, docroot);
 
         } catch (IOException e) {
-            System.out.println("[Server Setup] Unable to start ClassServer: " +
-                               e.getMessage());
+            System.out.println("[Server Setup] Unable to start ClassServer: " + e.getMessage());
             e.printStackTrace();
+        } finally {
+            String command = cin.nextLine();
+            while (!command.equals("stop")) {
+                System.out.println("Unrecognized command '" + command + "'. Type 'stop' to terminate server");
+                command = cin.nextLine();
+            }
+            // STOP THE SERVER
+            System.out.println("[Server Shutdown] Shutting down server..");
+            System.exit(0);
         }
     }
 
