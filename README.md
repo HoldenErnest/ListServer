@@ -3,6 +3,16 @@ This repository is for the [List](https://github.com/HoldenErnest/List) applicat
 
 Read [notes](notes.md) for more information on startup of the System as a whole
 
+## Setup
+- Clone the repo
+- Install Java JDK
+- Find all files to compile `find -name "*.java" > compileIt.txt`
+- Compile them `javac @compileIt.txt`
+
+## Running
+- `java ClassFileServer <port> <rootDir?>`
+- connect :)
+
 ## Goals:
 - get ssh working ✔
 - get certbot working ✔
