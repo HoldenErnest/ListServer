@@ -26,6 +26,8 @@ public abstract class ClassServer implements Runnable {
     private ServerSocket server = null;
     private BufferedWriter log;
 
+    private String senderIP;
+
     protected ClassServer(ServerSocket ss) {// this is only called once to accept the first connection
         server = ss;
         
@@ -54,8 +56,8 @@ public abstract class ClassServer implements Runnable {
             socket = server.accept(); // wait for a connection
             srcAddr = socket.getInetAddress();
             srcPort = socket.getLocalPort();
-
-            log("New Connection: " + srcAddr + ":" + srcPort);
+            senderIP = srcAddr + ":" + srcPort;
+            log("Connection attempt at " + senderIP);
         } catch (IOException e) {
             System.out.println("Server died: " + e.getMessage());
             e.printStackTrace();
@@ -71,15 +73,16 @@ public abstract class ClassServer implements Runnable {
 
             try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                
                 HeaderParser header = new HeaderParser();
                 if (!header.parseHeader(in)) {
                     writeErrorPage(out, "Incorrect Header");
+                    socket.close();
+                    System.exit(1);
                 }
+                log("Connection success at " + senderIP + " INFO: " + header.infoString());
 
                 try {
                     
-
                     writeHeaderToSocket(out, 7);
                     writeTextToSocket(out, "got it!");
 
