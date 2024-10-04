@@ -83,10 +83,7 @@ public class ClassFileServer extends ClassServer {
         if (args.length >= 2) {
             docroot = args[1];
         }
-        String type = "PlainSocket"; // Make sure this is "TLS"
-        if (args.length >= 3) {
-            type = args[2];
-        }
+        String type = "TLS"; // Make sure this is "TLS"
         try {
             System.out.println("[Server Setup] Setting up Secure Socket..");
             ServerSocketFactory ssf = ClassFileServer.getServerSocketFactory(type);

@@ -79,3 +79,8 @@ https.createServer(options, (req, res) => {
 
 10/3/2024
 - Created a Client in JS that connects to the ListServer, the list server also collects this data and the IP connection
+
+10/4/2024
+- Created a seperate Header class that parses and stores given headers (this will make it really easy to find out what the client was asking for and what to do with it)
+- Compiling all the java files is getting kind of annoying, so instead you can run `find -name "*.java" > compileIt.txt` to get a list of all the java files, then just do `javac @compileIt.txt`.
+- At this point I can do a bit with the parsed header options, but I really need to get a user DB and probably a UID folder structure.

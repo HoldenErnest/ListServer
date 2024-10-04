@@ -26,8 +26,7 @@ public abstract class ClassServer implements Runnable {
     private ServerSocket server = null;
     private BufferedWriter log;
 
-    protected ClassServer(ServerSocket ss) // this is only called once to accept the first connection
-    {
+    protected ClassServer(ServerSocket ss) {// this is only called once to accept the first connection
         server = ss;
         
         try {
@@ -71,17 +70,21 @@ public abstract class ClassServer implements Runnable {
             PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(rawOut))); // this output is used to send text only
 
             try {
-                // get path to class file from header
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 
-                // Parse the input header for info
-                String path = getPath(in);
-                try {
-                    byte[] data = getBytes(path);
+                HeaderParser header = new HeaderParser();
+                if (!header.parseHeader(in)) {
+                    writeErrorPage(out, "Incorrect Header");
+                }
 
-                    writeHeaderToSocket(out, data.length);
-                    writeTextToSocket(out, "testing");
-                    writeBytesToSocket(rawOut,data);
+                try {
+                    
+
+                    writeHeaderToSocket(out, 7);
+                    writeTextToSocket(out, "got it!");
+
+                    //byte[] data = getBytes(header.getPath());  // write back file if it was requested
+                    //writeBytesToSocket(rawOut,data);
 
                 } catch (Exception ie) {
                     ie.printStackTrace();
@@ -91,9 +94,7 @@ public abstract class ClassServer implements Runnable {
             } catch (Exception e) {
                 e.printStackTrace();
                 // write out error response
-                out.println("HTTP/1.0 400 " + e.getMessage() + "\r\n");
-                out.println("Content-Type: text/html\r\n\r\n");
-                out.flush();
+                writeErrorPage(out, e.getMessage());
             }
         } catch (IOException ex) {
             System.out.println("error writing response: " + ex.getMessage());
@@ -111,6 +112,12 @@ public abstract class ClassServer implements Runnable {
     }
 
     // Functions to Write to Socket ----------------------------
+
+    private void writeErrorPage(PrintWriter out, String m) {
+        out.println("HTTP/1.0 400 " + m + "\r\n");
+        out.println("Bad Header\r\n\r\n");
+        out.flush();
+    }
     private void writeHeaderToSocket(PrintWriter out, int cl) {
         out.print("HTTP/1.0 200 OK\r\n");
         out.print("Content-Length: " + cl + "\r\n");
@@ -129,34 +136,6 @@ public abstract class ClassServer implements Runnable {
     private void newListener()
     {
         (new Thread(this)).start(); // All new threads start at the run() method where they will patiently wait for a new client connection
-    }
-
-    
-    // TODO: refactor to also collect other info from the header
-    private static String getPath(BufferedReader in) throws IOException {
-        String line = in.readLine();
-        System.out.println("read line: " + line);
-        String path = "";
-        // extract class from GET line
-        if (line.startsWith("GET /")) {
-            line = line.substring(5, line.length()-1).trim();
-            int index = line.indexOf(' ');
-            if (index != -1) {
-                path = line.substring(0, index);
-            }
-        }
-
-        // eat the rest of header
-        do {
-            line = in.readLine();
-            System.out.println("read line: " + line);
-        } while ((line.length() != 0) && (line.charAt(0) != '\r') && (line.charAt(0) != '\n'));
-
-        if (path.length() != 0) {
-            return path;
-        } else {
-            throw new IOException("Malformed Header");
-        }
     }
     
     private void log(String s) {
