@@ -42,8 +42,6 @@ public abstract class ClassServer implements Runnable {
         
     }
 
-    public abstract byte[] getBytes(String path) throws IOException, FileNotFoundException;
-
     // Event on new a thread starting up
     public void run()
     {

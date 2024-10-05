@@ -10,3 +10,6 @@
 [Fri Oct 04 23:02:57 UTC 2024] Connection attempt at /127.0.0.1:2001
 [Fri Oct 04 23:03:55 UTC 2024] Connection attempt at /127.0.0.1:2001
 [Sat Oct 05 01:03:26 UTC 2024] Connection attempt at /127.0.0.1:2001
+[Sat Oct 05 21:32:51 UTC 2024] Connection attempt at /127.0.0.1:2001
+[Sat Oct 05 21:33:04 UTC 2024] Connection attempt at /127.0.0.1:2001
+[Sat Oct 05 21:33:04 UTC 2024] Connection success at /127.0.0.1:2001 INFO: {User: "some-username", Pass: "12345", List: "list-uid", Host: "127.0.0.1:2001"}

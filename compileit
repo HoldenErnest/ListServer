@@ -1,4 +1,5 @@
 ./ClassFileServer.java
 ./HeaderParser.java
+./User.java
 ./UserDB.java
 ./ClassServer.java
