@@ -88,3 +88,27 @@ https.createServer(options, (req, res) => {
 - I dont think SQL is good since its massive and you need to run a server for it. [MongoDB](https://www.mongodb.com/) seems like a decent choice.
 - [Hashing and Salting](https://auth0.com/blog/adding-salt-to-hashing-a-better-way-to-store-passwords/) could also be a good choice. You want to salt(sprinkle in random characters) before you hash so that no one can reverse-hash easily if they know one of the passwords. YOU SHOULD NOT use the same salt system-wide as anyone can find that and just prepend their searches, instead generate a unique salt for each entry.
 - Using json lib, download the jar from [org.json](https://github.com/stleary/JSON-java?tab=readme-ov-file). For now I can compile with: `javac -cp ~/ListServer/lib/json-20240303.jar @compileit` and run with: `java -cp :~/ListServer/lib/json-20240303.jar ClassFileServer 2001`
+
+10/5/2024
+- Gave up on Doing anything with json, decided to just store my bytes concatonated (it can still be parsed easily since hash and salt length are static)
+- Fully implimented the salting and hashing for users, created a little CLI to add and find users.
+- Hashing is irreversible, you can only compare the hash to a new hashed password with the same salt. This is the difference between it and Encryption
+### CLI Interaction
+```
+user add
+Enter: <Username> <Password>: fred secretPass
+[FILE] Writing to file: /ListServer/root/users/fred
+user get
+Enter: <Username> <Password?>: fred
+User 'fred' found!
+user get
+Enter: <Username> <Password?>: fred secretPass
+User 'fred' found!
+user get
+Enter: <Username> <Password?>: fred secretPassWhoops
+User 'fred' not found with that password.
+```
+### File contents of users/fred
+```
+�Ղ�M���vˬ����#�\��?6&���>��`�
+```
