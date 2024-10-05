@@ -100,6 +100,23 @@ public class ClassFileServer extends ClassServer {
             String command = cin.nextLine();
             while (!command.equals("stop")) {
                 System.out.println("Unrecognized command '" + command + "'. Type 'stop' to terminate server");
+                
+                System.out.println(command + " was input");
+                switch (command) {
+                    case "user add":
+                        System.out.println("Enter: (Username Password)");
+                        String userPass = cin.nextLine();
+                        int sp = userPass.indexOf(" ");
+                        String user = userPass.substring(0,sp);
+                        char[] pass = userPass.substring(sp+1).toCharArray();
+                        userPass = null;
+                        UserDB.createUser(user, pass);
+                        break;
+                
+                    default:
+                        break;
+                }
+
                 command = cin.nextLine();
             }
             // STOP THE SERVER

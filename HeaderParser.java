@@ -37,32 +37,32 @@ public class HeaderParser {
 
         do {
             try {
-            int sp = line.indexOf(": ");
-            String oKey = line.substring(0, sp);
-            String oValue = line.substring(sp+2);
+                int sp = line.indexOf(": ");
+                String oKey = line.substring(0, sp);
+                String oValue = line.substring(sp+2);
 
-            //System.out.println("key " + oKey + " val " + oValue);
-            switch (oKey) {
-                case "User":
-                    user = oValue;
-                    break;
-                case "Pass":
-                    pass = oValue;
-                    break;
-                case "List":
-                    listID = oValue;
-                    break;
-                case "Host":
-                    host = oValue;
-                    break;
+                //System.out.println("key " + oKey + " val " + oValue);
+                switch (oKey) {
+                    case "User":
+                        user = oValue;
+                        break;
+                    case "Pass":
+                        pass = oValue;
+                        break;
+                    case "List":
+                        listID = oValue;
+                        break;
+                    case "Host":
+                        host = oValue;
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.println("[Parse] Unexpected line: " + line);
             }
-        } catch (Exception e) {
-            System.out.println("[Parse] Unexpected line: " + line);
-        }
             line = in.readLine();
         } while ((line.length() != 0) && (line.charAt(0) != '\r') && (line.charAt(0) != '\n'));
 
-        System.out.println(String.format("[Parse] User: \"%s\". Pass: \"%s\". List: \"%s\". Host: \"%s\"", user, pass, listID, host));
+        System.out.println(infoString());
     }
 
     public String getPath() {

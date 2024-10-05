@@ -84,3 +84,7 @@ https.createServer(options, (req, res) => {
 - Created a seperate Header class that parses and stores given headers (this will make it really easy to find out what the client was asking for and what to do with it)
 - Compiling all the java files is getting kind of annoying, so instead you can run `find -name "*.java" > compileIt.txt` to get a list of all the java files, then just do `javac @compileIt.txt`.
 - At this point I can do a bit with the parsed header options, but I really need to get a user DB and probably a UID folder structure.
+- Determining what the best DB to use for Users/Pass and maybe even the files themselves:
+- I dont think SQL is good since its massive and you need to run a server for it. [MongoDB](https://www.mongodb.com/) seems like a decent choice.
+- [Hashing and Salting](https://auth0.com/blog/adding-salt-to-hashing-a-better-way-to-store-passwords/) could also be a good choice. You want to salt(sprinkle in random characters) before you hash so that no one can reverse-hash easily if they know one of the passwords. YOU SHOULD NOT use the same salt system-wide as anyone can find that and just prepend their searches, instead generate a unique salt for each entry.
+- Using json lib, download the jar from [org.json](https://github.com/stleary/JSON-java?tab=readme-ov-file). For now I can compile with: `javac -cp ~/ListServer/lib/json-20240303.jar @compileit` and run with: `java -cp :~/ListServer/lib/json-20240303.jar ClassFileServer 2001`

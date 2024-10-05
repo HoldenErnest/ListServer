@@ -61,7 +61,7 @@ public abstract class ClassServer implements Runnable {
         } catch (IOException e) {
             System.out.println("Server died: " + e.getMessage());
             e.printStackTrace();
-            return;
+            return; // end this thread
         }
 
         // create a new thread to wait for if there are any more connections
@@ -77,7 +77,7 @@ public abstract class ClassServer implements Runnable {
                 if (!header.parseHeader(in)) {
                     writeErrorPage(out, "Incorrect Header");
                     socket.close();
-                    System.exit(1);
+                    return; // stop this thread
                 }
                 log("Connection success at " + senderIP + " INFO: " + header.infoString());
 
