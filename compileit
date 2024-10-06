@@ -2,4 +2,5 @@
 ./HeaderParser.java
 ./User.java
 ./UserDB.java
+./ListMetaParser.java
 ./ClassServer.java

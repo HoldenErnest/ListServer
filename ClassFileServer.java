@@ -44,14 +44,20 @@ public class ClassFileServer extends ClassServer {
      * to <b>path</b> could not be loaded.
      */
 
-    public static byte[] getList(User user, String listName) throws IOException {
-        if (listName.contains(File.separator)) throw new IOException("Filename cannot contain sub directories");
-        return getBytes("lists" + File.separator + listName);
+    public static byte[] getList(String username, String listPath) throws IOException { // listPath should be "username/alist.csv"
+        if (!listPath.startsWith(username)) { // this list is from another user..
+            ListMetaParser listMeta = getListMeta(listroot + File.separator + listPath);
+            if (!listMeta.hasReadAccess(username)) throw new IOException("Not allowed read access to list");
+        }
+        return getBytes(listroot + File.separator + listPath);
+    }
+    private static ListMetaParser getListMeta(String listPath) throws IOException {
+        return new ListMetaParser(getBytes(listPath + ".meta"));
     }
 
     private static byte[] getBytes(String path) throws IOException { // Read a certain file from the docroot
         
-        System.out.println("reading: " + path);
+        System.out.println("[FILE] Loading File: " + path);
         File f = new File(ClassFileServer.docroot + File.separator + path);
         int length = (int)(f.length());
         if (length == 0) {

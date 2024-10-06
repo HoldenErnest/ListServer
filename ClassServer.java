@@ -18,6 +18,8 @@
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
+
 import javax.net.*;
 import java.util.Date;
 
@@ -72,23 +74,17 @@ public abstract class ClassServer implements Runnable {
             try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 HeaderParser header = new HeaderParser();
-                if (!header.parseHeader(in)) {
-                    writeErrorPage(out, "Incorrect Header");
-                    socket.close();
-                    return; // stop this thread
-                }
+
+                header.parseHeader(in); // this can throw an exception which will send a 400 page
+
                 log("Connection success at " + senderIP + " INFO: " + header.infoString());
                 // The metadata for the packet was collected so now do stuff with it.
 
                 String sendString = getInfo(header);
 
                 // The information to send back has been gathered, so send it.
-                if (sendString.length() == 0) {
-                    throw new Exception("Invalid Received Mode");
-                }
 
                 try {
-                    System.out.println("Sending: " + sendString);
                     writeHeaderToSocket(out, sendString.length());
                     writeTextToSocket(out, sendString);
 
@@ -124,7 +120,7 @@ public abstract class ClassServer implements Runnable {
 
     private void writeErrorPage(PrintWriter out, String m) {
         out.println("HTTP/1.0 400 " + m + "\r\n");
-        out.println("Bad Header\r\n\r\n");
+        out.println("Received Bad Info: " + m + "\r\n\r\n");
         out.flush();
     }
     private void writeHeaderToSocket(PrintWriter out, int cl) {
@@ -143,20 +139,36 @@ public abstract class ClassServer implements Runnable {
     }
 
     // One of the most important methods, from the header info return whatever you need to send as a string
-    private String getInfo(HeaderParser h) {
+    private String getInfo(HeaderParser h) throws Exception {
         String builder = "";
 
         switch (h.getMode()) {
-            case "login":
+            case "login": // test if login Username and Password is in DB
                 builder += getLoginModeInfo(h);
+                break;
+            case "get": // load and send a list specified by the user
+                builder += getLoadModeInfo(h);
+                break;
+            case "list":
+                builder += getLoadModeInfo(h);
                 break;
             default:
                 break;
         }
+        if (builder.length() == 0) {
+            throw new Exception("Invalid Received Mode");
+        }
+        System.out.println("SENDING: " + builder);
         return builder;
     }
-    private String getLoginModeInfo(HeaderParser h) {
-        return "HasUser: " + String.valueOf( UserDB.hasUser(h.getUsername(), h.getPassword().toCharArray()) );
+    private String getLoginModeInfo(HeaderParser h) throws Exception {
+        return "HasUser: true\n";
+    }
+    private String getLoadModeInfo(HeaderParser h) throws Exception {
+        String data = "";
+        byte[] listBytes = ClassFileServer.getList(h.getUsername(), h.getListPath());
+        data += new String(listBytes, StandardCharsets.UTF_8);
+        return data;
     }
 
     // END MODES ---------------------------------------------------------------------------

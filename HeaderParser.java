@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.*;
 import javax.net.*;
 import java.util.Date;
+import java.util.List;
 
 public class HeaderParser {
     private String filePath = ""; // Do I need this?
@@ -16,18 +17,11 @@ public class HeaderParser {
     private String host = ""; // IS THIS THE IP OF THE SENDER?
     private String listID = "";
     
-    public Boolean parseHeader(BufferedReader in) { // returns if the operation succeeded without issue
-        try {
-            parse(in);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
+    public void parseHeader(BufferedReader in) throws Exception { // returns if the operation succeeded without issue
+        parse(in);
     }
 
     private void parse(BufferedReader in) throws Exception { // Technically I want to make it differ from HTTP so that it cant be mistakenly accessed 
-        
-        
         
         // Read in the first line to make sure its a good connection
         line = in.readLine();
@@ -51,7 +45,7 @@ public class HeaderParser {
                         pass = oValue;
                         break;
                     case "List":
-                        listID = oValue;
+                        listID = oValue.replaceAll("[\\?%*:|\"<>]", "-"); // dissallow everything but / (for incase the file is from another user)
                         break;
                     case "Host":
                         host = oValue;
@@ -67,10 +61,26 @@ public class HeaderParser {
         } while ((line.length() != 0) && (line.charAt(0) != '\r') && (line.charAt(0) != '\n'));
 
         System.out.println(infoString());
+        if (!UserDB.hasUser(getUsername(), getPassword().toCharArray())) throw new Exception("Invalid User");
     }
 
-    public String getPath() {
-        return filePath; // this path might be gotten from user/listID.csv
+    public String getListPath() throws Exception {
+        if (user.length() == 0 || listID.length() == 0) {
+            throw new Exception("Cannot get a valid path from this header");
+        }
+
+        int delim = listID.indexOf("/");
+        if (delim > 1 && listID.length() - delim >= 1)  { // the username(before /) is real and the listName(after /) is real
+            int delim2 = listID.indexOf("/",delim+1);
+            if (delim2 > 0) {
+                throw new Exception("ListID is invalid");
+            }
+            return listID + ".csv";
+        } else if (delim > 0) {
+            throw new Exception("ListID is invalid");
+        }
+
+        return user + File.separator + listID + ".csv"; // users/jimmy/aList.csv
     }
     public String getMode() {
         return mode;
