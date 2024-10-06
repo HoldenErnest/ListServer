@@ -18,4 +18,5 @@ Read [notes](notes.md) for more information on startup of the System as a whole
 - get certbot working ✔
 - get apache working? ✔
 - generate a working ssl socket ✔
-- generate a client in js that can connect to this
+- generate a client in js that can connect to this ✔
+- configure the server to accept specific requests from the client
