@@ -156,6 +156,7 @@ public class ClassFileServer extends ClassServer {
         userPass = null;
         if (assertBadEntry(pass.length == 0 || user.length() == 0)) return;
         UserDB.createUser(user, pass);
+        System.out.println("User \'" + user + "\' added!\n");
     }
     private static void tryGetUser() { // see if there is a user in the db, password check is optional
         System.out.print("Enter: <Username> <Password?>: ");
@@ -176,15 +177,15 @@ public class ClassFileServer extends ClassServer {
 
         if (pass == null) { // no password given
             if (UserDB.hasUser(user)) {
-                    System.out.println("User \'" + user + "\' found!");
+                    System.out.println("User \'" + user + "\' found!\n");
             } else {
-                System.out.println("User \'" + user + "\' not found.");
+                System.out.println("User \'" + user + "\' not found.\n");
             }
         } else { // password given
             if (UserDB.hasUser(user, pass)) {
-                System.out.println("User \'" + user + "\' found!");
+                System.out.println("User \'" + user + "\' found!\n");
             } else {
-                System.out.println("User \'" + user + "\' not found with that password.");
+                System.out.println("User \'" + user + "\' not found with that password.\n");
             }
             
         }

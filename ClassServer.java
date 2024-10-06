@@ -78,16 +78,24 @@ public abstract class ClassServer implements Runnable {
                     return; // stop this thread
                 }
                 log("Connection success at " + senderIP + " INFO: " + header.infoString());
+                // The metadata for the packet was collected so now do stuff with it.
+
+                String sendString = getInfo(header);
+
+                // The information to send back has been gathered, so send it.
+                if (sendString.length() == 0) {
+                    throw new Exception("Invalid Received Mode");
+                }
 
                 try {
-                    
-                    writeHeaderToSocket(out, 7);
-                    writeTextToSocket(out, "got it!");
+                    System.out.println("Sending: " + sendString);
+                    writeHeaderToSocket(out, sendString.length());
+                    writeTextToSocket(out, sendString);
 
                     //byte[] data = getBytes(header.getPath());  // write back file if it was requested
                     //writeBytesToSocket(rawOut,data);
 
-                } catch (Exception ie) {
+                } catch (Exception ie) { // cant send info.
                     ie.printStackTrace();
                     return;
                 }
@@ -133,6 +141,25 @@ public abstract class ClassServer implements Runnable {
         out.write(data);
         out.flush();
     }
+
+    // One of the most important methods, from the header info return whatever you need to send as a string
+    private String getInfo(HeaderParser h) {
+        String builder = "";
+
+        switch (h.getMode()) {
+            case "login":
+                builder += getLoginModeInfo(h);
+                break;
+            default:
+                break;
+        }
+        return builder;
+    }
+    private String getLoginModeInfo(HeaderParser h) {
+        return "HasUser: " + String.valueOf( UserDB.hasUser(h.getUsername(), h.getPassword().toCharArray()) );
+    }
+
+    // END MODES ---------------------------------------------------------------------------
 
     private void newListener()
     {

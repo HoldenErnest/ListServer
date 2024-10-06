@@ -12,6 +12,7 @@ public class HeaderParser {
     private String line = "";
     private String user = "";
     private String pass = "";
+    private String mode = ""; // 'login', 'perms', 'get', 'save'
     private String host = ""; // IS THIS THE IP OF THE SENDER?
     private String listID = "";
     
@@ -55,6 +56,9 @@ public class HeaderParser {
                     case "Host":
                         host = oValue;
                         break;
+                    case "Mode":
+                        mode = oValue;
+                        break;
                 }
             } catch (Exception e) {
                 System.out.println("[Parse] Unexpected line: " + line);
@@ -68,8 +72,17 @@ public class HeaderParser {
     public String getPath() {
         return filePath; // this path might be gotten from user/listID.csv
     }
+    public String getMode() {
+        return mode;
+    }
+    public String getUsername() {
+        return user;
+    }
+    public String getPassword() {
+        return pass;
+    }
 
     public String infoString() {
-       return String.format("{User: \"%s\", Pass: \"%s\", List: \"%s\", Host: \"%s\"}", user, pass, listID, host);
+       return String.format("{User: \"%s\", Pass: \"%s\", Mode: \"%s\", List: \"%s\", Host: \"%s\"}", user, pass, mode, listID, host);
     }
 } 
