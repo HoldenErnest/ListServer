@@ -112,3 +112,5 @@ User 'fred' not found with that password.
 ```
 �Ղ�M���vˬ����#�\��?6&���>��`�
 ```
+- Sorted it better though when its in ram. [sort](https://stackoverflow.com/questions/29728756/sorting-objects-in-an-arraylist-based-on-their-string-field), [search](https://stackoverflow.com/questions/12496038/searching-in-a-arraylist-with-custom-objects-for-certain-strings)
+- Worked on transmission protocol outline, then sent a login request from client that responded correctly! First relevant transmission.
