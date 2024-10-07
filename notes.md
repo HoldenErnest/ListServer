@@ -114,3 +114,10 @@ User 'fred' not found with that password.
 ```
 - Sorted it better though when its in ram. [sort](https://stackoverflow.com/questions/29728756/sorting-objects-in-an-arraylist-based-on-their-string-field), [search](https://stackoverflow.com/questions/12496038/searching-in-a-arraylist-with-custom-objects-for-certain-strings)
 - Worked on transmission protocol outline, then sent a login request from client that responded correctly! First relevant transmission.
+
+10/6/2024
+- Worked on Reading Lists / Verifying Users / Writing Lists
+- Might want to look into [peer certificate checking](https://stackoverflow.com/questions/20624586/is-ssl-enough-for-protecting-a-request-and-its-headers) to add more protection from MitM attacks. (From what I gather this is just client sends key and or cert in the Header).
+- Writing got kind of annoying, had to restructure some of the Request since the client `https.get()` doesnt accept body data. Overall I got it working, you can now: `overwrite your own lists, write to your own new lists, and write to others lists with user marked in metafile as write access`.
+- TODO: **!IMPORTANT!** make sure users can only create a certain amount of lists / a certain amount of bytes per list.
+- 867 total lines :)

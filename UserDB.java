@@ -130,6 +130,9 @@ public class UserDB {
         return shouldBeAUser.get(0);
     }
 
+    private static void createUserFolder(String username) { // create the user folder for their lists (this is only called when you make a new user).
+        new File(ClassFileServer.getListsPath() + username).mkdirs();
+    }
 
     private static void saveUser(User u, Boolean overwrite) throws IOException { // Read a certain file from the docroot
         byte[] userByteString = u.toBytes();

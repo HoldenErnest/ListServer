@@ -16,6 +16,8 @@ public class HeaderParser {
     private String mode = ""; // 'login', 'perms', 'get', 'save'
     private String host = ""; // IS THIS THE IP OF THE SENDER?
     private String listID = "";
+    private String data = "";
+    private int dataLen = 0;
     
     public void parseHeader(BufferedReader in) throws Exception { // returns if the operation succeeded without issue
         parse(in);
@@ -32,7 +34,10 @@ public class HeaderParser {
 
         do {
             try {
+                //System.out.println("[Parse] line: " + line);
+
                 int sp = line.indexOf(": ");
+
                 String oKey = line.substring(0, sp);
                 String oValue = line.substring(sp+2);
 
@@ -53,14 +58,26 @@ public class HeaderParser {
                     case "Mode":
                         mode = oValue;
                         break;
+                    case "Content-Length":
+                        dataLen = Integer.parseInt(oValue);
+                        break;
                 }
             } catch (Exception e) {
                 System.out.println("[Parse] Unexpected line: " + line);
             }
-            line = in.readLine();
-        } while ((line.length() != 0) && (line.charAt(0) != '\r') && (line.charAt(0) != '\n'));
+            
+        } while (!(line = in.readLine()).equals(""));
 
-        System.out.println(infoString());
+        // READ THE BODY SEPERATLY (if there is body to read)
+        if (dataLen > 0) {
+            StringBuilder body = new StringBuilder();
+            char[] buffer = new char[dataLen];
+            in.read(buffer, 0, dataLen);
+            body.append(buffer);
+            data = body.toString();
+        }
+        System.out.println("Connection: " + infoString());
+
         if (!UserDB.hasUser(getUsername(), getPassword().toCharArray())) throw new Exception("Invalid User");
     }
 
@@ -91,8 +108,11 @@ public class HeaderParser {
     public String getPassword() {
         return pass;
     }
+    public byte[] getData() {
+        return data.getBytes();
+    }
 
     public String infoString() {
-       return String.format("{User: \"%s\", Pass: \"%s\", Mode: \"%s\", List: \"%s\", Host: \"%s\"}", user, pass, mode, listID, host);
+       return String.format("{User: \"%s\", Pass: \"%s\", Mode: \"%s\", List: \"%s\", Host: \"%s\", Content-Len: \"%s\"}", user, pass, mode, listID, host, dataLen);
     }
 } 

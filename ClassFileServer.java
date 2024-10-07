@@ -46,22 +46,59 @@ public class ClassFileServer extends ClassServer {
 
     public static byte[] getList(String username, String listPath) throws IOException { // listPath should be "username/alist.csv"
         if (!listPath.startsWith(username)) { // this list is from another user..
-            ListMetaParser listMeta = getListMeta(listroot + File.separator + listPath);
-            if (!listMeta.hasReadAccess(username)) throw new IOException("Not allowed read access to list");
+            ListMetaParser listMeta = getListMeta(listPath);
+            if (listMeta == null || !listMeta.hasReadAccess(username)) throw new IOException("Not allowed read access to this list");
         }
-        return getBytes(listroot + File.separator + listPath);
+        return getBytes(ClassFileServer.getListsPath() + listPath);
     }
-    private static ListMetaParser getListMeta(String listPath) throws IOException {
-        return new ListMetaParser(getBytes(listPath + ".meta"));
+    private static ListMetaParser getListMeta(String listPath) throws IOException { // This takes username/listname
+        return new ListMetaParser(getBytes(ClassFileServer.getListsPath() + listPath + ".meta"));
+    }
+    public static void saveList(String username, String listPath, byte[] listBytes) throws IOException {
+        if (!listPath.startsWith(username)) { // this list is from another user..
+            ListMetaParser listMeta = getListMeta(listPath);
+            if (listMeta == null || !listMeta.hasWriteAccess(username)) throw new IOException("Not allowed write access to this list");
+        }
+        writeListToFile(username, listPath, listBytes, true);
     }
 
-    private static byte[] getBytes(String path) throws IOException { // Read a certain file from the docroot
+
+    private static void writeListToFile(String username, String listPath, byte[] listByteString, Boolean overwrite) throws IOException { // Use saveList(), dont call this directly (for user checking reasons)
+        File f = new File(ClassFileServer.getListsPath() + listPath);
+        int length = (int)(f.length());
+        if (length == 0 || overwrite) { // if it doesnt exist or you can overwrite it, start writing
+            System.out.println("[FILE] Writing to file: " + ClassFileServer.getListsPath() + listPath);
+            FileOutputStream outputStream = new FileOutputStream(f);
+            outputStream.write(listByteString);
+            outputStream.close();
+
+            if (length == 0) { // length was 0, meaning it was a newly created list file
+                writeMetaFile(username, listPath, false);
+            }
+
+        } else {
+            throw new IOException("[FILE] Cannot overwrite: " + ClassFileServer.getListsPath() + listPath);
+        }
+    }
+    private static void writeMetaFile(String username, String listPath, Boolean overwrite) throws IOException { // only to be called when youre creating new lists (writeListToFile())
+        System.out.println("Writing new Metafile for: " + listPath);
+        String metafile = "owner: " + username + "\nread: " + "\nwrite: ";
+        File f = new File(ClassFileServer.getListsPath() + listPath + ".meta");
+        int length = (int)(f.length());
+        if (length == 0 || overwrite) {
+            FileOutputStream outputStream = new FileOutputStream(f);
+            
+            outputStream.write(metafile.getBytes(ClassFileServer.getListsPath() + listPath));
+            outputStream.close();
+        }
+    }
+    private static byte[] getBytes(String path) throws IOException { // Read a certain file from the docroot // this takes /home/absolute/path/to/file
         
         System.out.println("[FILE] Loading File: " + path);
-        File f = new File(ClassFileServer.docroot + File.separator + path);
+        File f = new File(path);
         int length = (int)(f.length());
         if (length == 0) {
-            throw new IOException("File length is zero: " + path);
+            throw new IOException("File doesnt exist");
         } else {
             FileInputStream fin = new FileInputStream(f);
             DataInputStream in = new DataInputStream(fin);

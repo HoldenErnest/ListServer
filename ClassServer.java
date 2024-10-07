@@ -93,6 +93,7 @@ public abstract class ClassServer implements Runnable {
 
                 } catch (Exception ie) { // cant send info.
                     ie.printStackTrace();
+                    System.out.println("PROBLEM::::: CANNOT WRITE TO SOCKET, socket not closed");
                     return;
                 }
 
@@ -149,8 +150,11 @@ public abstract class ClassServer implements Runnable {
             case "get": // load and send a list specified by the user
                 builder += getLoadModeInfo(h);
                 break;
-            case "list":
-                builder += getLoadModeInfo(h);
+            case "list": // give a list of all Available Lists to the user.
+                builder += "This mode is depricated / not implimented";
+                break;
+            case "save": // attempt to save a list to this server, on fail, it will be reported.
+                builder += getSaveModeInfo(h);
                 break;
             default:
                 break;
@@ -169,6 +173,11 @@ public abstract class ClassServer implements Runnable {
         byte[] listBytes = ClassFileServer.getList(h.getUsername(), h.getListPath());
         data += new String(listBytes, StandardCharsets.UTF_8);
         return data;
+    }
+    private String getSaveModeInfo(HeaderParser h) throws Exception {
+        ClassFileServer.saveList(h.getUsername(), h.getListPath(), h.getData());
+
+        return "Successfully Saved List " + h.getListPath();
     }
 
     // END MODES ---------------------------------------------------------------------------
