@@ -19,4 +19,6 @@ Read [notes](notes.md) for more information on startup of the System as a whole
 - get apache working? ✔
 - generate a working ssl socket ✔
 - generate a client in js that can connect to this ✔
-- configure the server to accept specific requests from the client
+- configure the server to accept specific requests from the client ✔
+- optimize the protocol, Read the [notes](notes.md)
+- Give the client more options to interact with the server
