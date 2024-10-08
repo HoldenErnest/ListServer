@@ -121,6 +121,6 @@ User 'fred' not found with that password.
 - Writing got kind of annoying, had to restructure some of the Request since the client `https.get()` doesnt accept body data. Overall I got it working, you can now: `overwrite your own lists, write to your own new lists, and write to others lists with user marked in metafile as write access`.
 - TODO: **!IMPORTANT!** make sure users can only create a certain amount of lists / a certain amount of bytes per list.
 - 867 total lines :)
-- 
+
 10/7/2024
 - I figured out a problem: when a list is shared for writing, you might have a problem if multiple people try to access it at the same time.
