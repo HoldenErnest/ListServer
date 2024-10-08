@@ -142,3 +142,4 @@ User 'fred' not found with that password.
 - I worked on getting reading to work. I had to mess around with `async functions`. If a method contains `await` it MUST be async, you dont need async calls to have await unless you care about its return value.
 - Reading, Writing, and Login all work pretty well and are implimented into the client pretty much seamlessly
 - If reading a list from the server doesnt work it will just grab it from a local copy which it stores with every write attempt. (WARNING) Obviously you cant write to it yet offline since it will currently prioritize the servers copy, maybe I should impliment a date of write with the metadata.
+- 876(Server) + 913(Client) = 1789 Total lines
