@@ -5,9 +5,9 @@
 ## Things to consider:
 - How do I deal with multiple users writing on the same list
 - Should I require users to login everytime they open the app? (I think no)
-- Should I save entire lists or try to find the changes made to a list and send that?
+- Should I save/send entire lists or try to find the changes made to a list and send that?
 - Should I try to load lists in chunks so the user can have something to look at while the rest of the list loads?
-- If I load a list once I probably shouldnt reload it when I switch lists and switch back.
+- If I load a list once I probably shouldnt reload it when I switch lists and switch back. (With save protocol I can send a date, if this date is more recent than the lists on the server then respond with error: (you already have a more recent version of this list saved locally))
 - How do I deal with writing when the user is offline (should I save last write date with metadata and load whichever is more recent?)
 
 
