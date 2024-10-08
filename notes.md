@@ -124,3 +124,9 @@ User 'fred' not found with that password.
 
 10/7/2024
 - I figured out a problem: when a list is shared for writing, you might have a problem if multiple people try to access it at the same time.
+
+10/8/2024
+- Technically its the 8th, only by a couple hours. I spent time working on being able to send lists to the server on save which its now able to do.
+- Server side in.read buffer was only so big, so I had to loop the data to get chunks. (Figured this would eventually be the case)
+- I still need to handle exceptions client side however. Failed saves might result in a red notification (detailed error report on hover?)
+- I go sleep now
