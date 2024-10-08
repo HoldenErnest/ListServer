@@ -3,7 +3,7 @@
 // https://docs.oracle.com/javase/10/security/sample-code-illustrating-secure-socket-connection-client-and-server.htm#JSSEC-GUID-3561ED02-174C-4E65-8BB1-5995E9B7282C
 
 /* 
- * This file starts up a secure socket then forwards it to ClassServer.java to handle the connections
+ * This file starts up a secure socket then forwards it to ClientConnection.java to handle the connections
  */
 
 import java.io.*;
@@ -14,7 +14,7 @@ import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
 import java.util.Scanner;
 
-public class ClassFileServer extends ClassServer {
+public class Server extends ClientConnection {
 
     private static String docroot;
     private static final String userroot = "users";
@@ -25,14 +25,14 @@ public class ClassFileServer extends ClassServer {
     private static Scanner cin;
 
     /**
-     * Constructs a ClassFileServer.
+     * Constructs a Server.
      *
      * @param path the path where the server locates files
      */
-    public ClassFileServer(ServerSocket ss, String docroot) throws IOException
+    public Server(ServerSocket ss, String docroot) throws IOException
     {
         super(ss);
-        ClassFileServer.docroot = docroot;
+        Server.docroot = docroot;
     }
 
     /**
@@ -49,10 +49,10 @@ public class ClassFileServer extends ClassServer {
             ListMetaParser listMeta = getListMeta(listPath);
             if (listMeta == null || !listMeta.hasReadAccess(username)) throw new IOException("Not allowed read access to this list");
         }
-        return getBytes(ClassFileServer.getListsPath() + listPath);
+        return getBytes(Server.getListsPath() + listPath);
     }
     private static ListMetaParser getListMeta(String listPath) throws IOException { // This takes username/listname
-        return new ListMetaParser(getBytes(ClassFileServer.getListsPath() + listPath + ".meta"));
+        return new ListMetaParser(getBytes(Server.getListsPath() + listPath + ".meta"));
     }
     public static void saveList(String username, String listPath, byte[] listBytes) throws IOException {
         if (!listPath.startsWith(username)) { // this list is from another user..
@@ -64,10 +64,10 @@ public class ClassFileServer extends ClassServer {
 
 
     private static void writeListToFile(String username, String listPath, byte[] listByteString, Boolean overwrite) throws IOException { // Use saveList(), dont call this directly (for user checking reasons)
-        File f = new File(ClassFileServer.getListsPath() + listPath);
+        File f = new File(Server.getListsPath() + listPath);
         int length = (int)(f.length());
         if (length == 0 || overwrite) { // if it doesnt exist or you can overwrite it, start writing
-            System.out.println("[FILE] Writing to file: " + ClassFileServer.getListsPath() + listPath);
+            System.out.println("[FILE] Writing to file: " + Server.getListsPath() + listPath);
             FileOutputStream outputStream = new FileOutputStream(f);
             outputStream.write(listByteString);
             outputStream.close();
@@ -77,18 +77,18 @@ public class ClassFileServer extends ClassServer {
             }
 
         } else {
-            throw new IOException("[FILE] Cannot overwrite: " + ClassFileServer.getListsPath() + listPath);
+            throw new IOException("[FILE] Cannot overwrite: " + Server.getListsPath() + listPath);
         }
     }
     private static void writeMetaFile(String username, String listPath, Boolean overwrite) throws IOException { // only to be called when youre creating new lists (writeListToFile())
         System.out.println("Writing new Metafile for: " + listPath);
         String metafile = "owner: " + username + "\nread: " + "\nwrite: ";
-        File f = new File(ClassFileServer.getListsPath() + listPath + ".meta");
+        File f = new File(Server.getListsPath() + listPath + ".meta");
         int length = (int)(f.length());
         if (length == 0 || overwrite) {
             FileOutputStream outputStream = new FileOutputStream(f);
             
-            outputStream.write(metafile.getBytes(ClassFileServer.getListsPath() + listPath));
+            outputStream.write(metafile.getBytes(Server.getListsPath() + listPath));
             outputStream.close();
         }
     }
@@ -110,7 +110,7 @@ public class ClassFileServer extends ClassServer {
     }
     public static void main(String args[]) {
         cin = new Scanner(System.in);
-        // "Start as: java ClassFileServer port docroot TLS"
+        // "Start as: java Server port docroot TLS"
         System.out.println("");
         System.out.println("[Server Setup] Initializing Lupu List Server..");
         System.out.println("");
@@ -119,20 +119,20 @@ public class ClassFileServer extends ClassServer {
             port = Integer.parseInt(args[0]);
         }
         if (args.length >= 2) {
-            ClassFileServer.docroot = args[1];
+            Server.docroot = args[1];
         }
         String type = "TLS"; // Make sure this is "TLS"
         try {
             System.out.println("[Server Setup] Setting up Secure Socket..");
-            ServerSocketFactory ssf = ClassFileServer.getServerSocketFactory(type);
+            ServerSocketFactory ssf = Server.getServerSocketFactory(type);
             ServerSocket ss = ssf.createServerSocket(port); // create serverSocket with the specifications from ssf
 
-            // When you create this Object, the Super (ClassServer) will handle the rest (multithreading and whatnot)
+            // When you create this Object, the Super (ClientConnection) will handle the rest (multithreading and whatnot)
             System.out.println("[Server Setup] Successfully Setup");
-            new ClassFileServer(ss, ClassFileServer.docroot);
+            new Server(ss, Server.docroot);
 
         } catch (IOException e) {
-            System.out.println("[Server Setup] Unable to start ClassServer: " + e.getMessage());
+            System.out.println("[Server Setup] Unable to start ClientConnection: " + e.getMessage());
             e.printStackTrace();
         } finally {
             String command = cin.nextLine();
@@ -245,9 +245,9 @@ public class ClassFileServer extends ClassServer {
 
     // Accessor
     public static String getUsersPath() {
-        return ClassFileServer.docroot + ClassFileServer.userroot + File.separator;
+        return Server.docroot + Server.userroot + File.separator;
     }
     public static String getListsPath() {
-        return ClassFileServer.docroot + ClassFileServer.listroot + File.separator;
+        return Server.docroot + Server.listroot + File.separator;
     }
 }

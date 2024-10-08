@@ -23,14 +23,14 @@ import java.nio.charset.StandardCharsets;
 import javax.net.*;
 import java.util.Date;
 
-public abstract class ClassServer implements Runnable {
+public abstract class ClientConnection implements Runnable {
 
     private ServerSocket server = null;
     private BufferedWriter log;
 
     private String senderIP;
 
-    protected ClassServer(ServerSocket ss) {// this is only called once to accept the first connection
+    protected ClientConnection(ServerSocket ss) {// this is only called once to accept the first connection
         server = ss;
         
         try {
@@ -73,7 +73,7 @@ public abstract class ClassServer implements Runnable {
 
             try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                HeaderParser header = new HeaderParser();
+                ConnectionParser header = new ConnectionParser();
 
                 header.parseHeader(in); // this can throw an exception which will send a 400 page
 
@@ -140,7 +140,7 @@ public abstract class ClassServer implements Runnable {
     }
 
     // One of the most important methods, from the header info return whatever you need to send as a string
-    private String getInfo(HeaderParser h) throws Exception {
+    private String getInfo(ConnectionParser h) throws Exception {
         String builder = "";
 
         switch (h.getMode()) {
@@ -165,25 +165,24 @@ public abstract class ClassServer implements Runnable {
         System.out.println("SENDING: " + builder);
         return builder;
     }
-    private String getLoginModeInfo(HeaderParser h) throws Exception {
+    private String getLoginModeInfo(ConnectionParser h) throws Exception {
         return "HasUser: true\n";
     }
-    private String getLoadModeInfo(HeaderParser h) throws Exception {
+    private String getLoadModeInfo(ConnectionParser h) throws Exception {
         String data = "";
-        byte[] listBytes = ClassFileServer.getList(h.getUsername(), h.getListPath());
+        byte[] listBytes = Server.getList(h.getUsername(), h.getListPath());
         data += new String(listBytes, StandardCharsets.UTF_8);
         return data;
     }
-    private String getSaveModeInfo(HeaderParser h) throws Exception {
-        ClassFileServer.saveList(h.getUsername(), h.getListPath(), h.getData());
+    private String getSaveModeInfo(ConnectionParser h) throws Exception {
+        Server.saveList(h.getUsername(), h.getListPath(), h.getData());
 
         return "Successfully Saved List " + h.getListPath();
     }
 
     // END MODES ---------------------------------------------------------------------------
 
-    private void newListener()
-    {
+    private void newListener() {
         (new Thread(this)).start(); // All new threads start at the run() method where they will patiently wait for a new client connection
     }
     

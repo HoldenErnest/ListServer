@@ -1,6 +1,6 @@
-./ClassFileServer.java
-./HeaderParser.java
 ./User.java
+./Server.java
 ./UserDB.java
 ./ListMetaParser.java
-./ClassServer.java
+./ClientConnection.java
+./ConnectionParser.java

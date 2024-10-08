@@ -32,7 +32,7 @@ public class UserDB {
 
     }
 
-    public static void createUser(String user, char[] pass) { // INTERFACE for the user to interact with (from ClassFileServer CLI you 'user add', which will call this method)
+    public static void createUser(String user, char[] pass) { // INTERFACE for the user to interact with (from Server CLI you 'user add', which will call this method)
         if (hasUser(user)) return;
         
         User newUser = createNewUserHash(user, pass); // TODO: maybe log this new user creation
@@ -131,24 +131,24 @@ public class UserDB {
     }
 
     private static void createUserFolder(String username) { // create the user folder for their lists (this is only called when you make a new user).
-        new File(ClassFileServer.getListsPath() + username).mkdirs();
+        new File(Server.getListsPath() + username).mkdirs();
     }
 
     private static void saveUser(User u, Boolean overwrite) throws IOException { // Read a certain file from the docroot
         byte[] userByteString = u.toBytes();
-        File f = new File(ClassFileServer.getUsersPath() + u.getUsername());
+        File f = new File(Server.getUsersPath() + u.getUsername());
         int length = (int)(f.length());
         if (length == 0 || overwrite) { // if it doesnt exist or you can overwrite it, start writing
-            System.out.println("[FILE] Writing to file: " + ClassFileServer.getUsersPath() + u.getUsername());
+            System.out.println("[FILE] Writing to file: " + Server.getUsersPath() + u.getUsername());
             FileOutputStream outputStream = new FileOutputStream(f);
             outputStream.write(userByteString);
             outputStream.close();
         } else {
-            throw new IOException("[FILE] Cannot overwrite: " + ClassFileServer.getUsersPath() + u.getUsername());
+            throw new IOException("[FILE] Cannot overwrite: " + Server.getUsersPath() + u.getUsername());
         }
     }
     private static User tryDownloadUser(String username) throws IOException { // Read a certain file from the users files
-        File f = new File(ClassFileServer.getUsersPath() + username);
+        File f = new File(Server.getUsersPath() + username);
         int length = (int)(f.length());
         if (length == 0) {
             throw new IOException("File length is zero: " + username);

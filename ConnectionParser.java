@@ -8,7 +8,7 @@ import javax.net.*;
 import java.util.Date;
 import java.util.List;
 
-public class HeaderParser {
+public class ConnectionParser {
     private String filePath = ""; // Do I need this?
     private String line = "";
     private String user = "";
@@ -18,6 +18,7 @@ public class HeaderParser {
     private String listID = "";
     private String data = "";
     private int dataLen = 0;
+    private int recievedLen = 0;
     
     public void parseHeader(BufferedReader in) throws Exception { // returns if the operation succeeded without issue
         parse(in);
@@ -70,13 +71,21 @@ public class HeaderParser {
 
         // READ THE BODY SEPERATLY (if there is body to read)
         if (dataLen > 0) {
+            int readChars = 0;
             StringBuilder body = new StringBuilder();
             char[] buffer = new char[dataLen];
-            in.read(buffer, 0, dataLen);
-            body.append(buffer);
+            while ((readChars = in.read(buffer, 0, dataLen-recievedLen)) != -1 && recievedLen < dataLen) { // read might not get all the bytes first go, so keep reading till its all been read
+                System.out.println(recievedLen + "/" + dataLen);
+                body.append(buffer, 0, readChars);
+                recievedLen += readChars;
+            }
             data = body.toString();
+
         }
         System.out.println("Connection: " + infoString());
+        if (recievedLen < dataLen) {
+            throw new Exception("Not all Data could be read");
+        }
 
         if (!UserDB.hasUser(getUsername(), getPassword().toCharArray())) throw new Exception("Invalid User");
     }
@@ -113,6 +122,6 @@ public class HeaderParser {
     }
 
     public String infoString() {
-       return String.format("{User: \"%s\", Pass: \"%s\", Mode: \"%s\", List: \"%s\", Host: \"%s\", Content-Len: \"%s\"}", user, pass, mode, listID, host, dataLen);
+       return String.format("{User: \"%s\", Pass: \"%s\", Mode: \"%s\", List: \"%s\", Host: %s, Content-Len: %s, Received: %s}", user, pass, mode, listID, host, dataLen, recievedLen);
     }
 } 
