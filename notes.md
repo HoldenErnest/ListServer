@@ -2,6 +2,15 @@
 - I'm using [NoIP](https://my.noip.com/dynamic-dns) as my dns provider
 
 
+## Things to consider:
+- How do I deal with multiple users writing on the same list
+- Should I require users to login everytime they open the app? (I think no)
+- Should I save entire lists or try to find the changes made to a list and send that?
+- Should I try to load lists in chunks so the user can have something to look at while the rest of the list loads?
+- If I load a list once I probably shouldnt reload it when I switch lists and switch back.
+- How do I deal with writing when the user is offline (should I save last write date with metadata and load whichever is more recent?)
+
+
 ## Day to day:
 
 9/12/2024
@@ -130,3 +139,6 @@ User 'fred' not found with that password.
 - Server side in.read buffer was only so big, so I had to loop the data to get chunks. (Figured this would eventually be the case)
 - I still need to handle exceptions client side however. Failed saves might result in a red notification (detailed error report on hover?)
 - I go sleep now
+- I worked on getting reading to work. I had to mess around with `async functions`. If a method contains `await` it MUST be async, you dont need async calls to have await unless you care about its return value.
+- Reading, Writing, and Login all work pretty well and are implimented into the client pretty much seamlessly
+- If reading a list from the server doesnt work it will just grab it from a local copy which it stores with every write attempt. (WARNING) Obviously you cant write to it yet offline since it will currently prioritize the servers copy, maybe I should impliment a date of write with the metadata.

@@ -98,7 +98,8 @@ public abstract class ClientConnection implements Runnable {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                System.out.println("ERROR: " + e);
                 // write out error response
                 writeErrorPage(out, e.getMessage());
             }
@@ -162,7 +163,6 @@ public abstract class ClientConnection implements Runnable {
         if (builder.length() == 0) {
             throw new Exception("Invalid Received Mode");
         }
-        System.out.println("SENDING: " + builder);
         return builder;
     }
     private String getLoginModeInfo(ConnectionParser h) throws Exception {

@@ -8,6 +8,7 @@
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import javax.net.*;
 import javax.net.ssl.*;
@@ -88,7 +89,7 @@ public class Server extends ClientConnection {
         if (length == 0 || overwrite) {
             FileOutputStream outputStream = new FileOutputStream(f);
             
-            outputStream.write(metafile.getBytes(Server.getListsPath() + listPath));
+            outputStream.write(metafile.getBytes(StandardCharsets.UTF_8));
             outputStream.close();
         }
     }
