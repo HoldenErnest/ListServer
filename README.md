@@ -10,8 +10,8 @@ Read [notes](notes.md) for more information on startup of the System as a whole
 - Compile them `javac @compileIt.txt`
 
 ## Running
-- `java ClassFileServer <port> <rootDir?>`
-- connect :)
+- `java Server <port> <rootDir>`
+- connect using my List application
 
 ## Goals:
 - get ssh working ✔
@@ -21,4 +21,5 @@ Read [notes](notes.md) for more information on startup of the System as a whole
 - generate a client in js that can connect to this ✔
 - configure the server to accept specific requests from the client ✔
 - optimize the protocol, Read the [notes](notes.md)
-- Give the client more options to interact with the server
+- optimize the client
+- dockerize it all?
