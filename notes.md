@@ -9,6 +9,7 @@
 - Should I try to load lists in chunks so the user can have something to look at while the rest of the list loads?
 - If I load a list once I probably shouldnt reload it when I switch lists and switch back. (With save protocol I can send a date, if this date is more recent than the lists on the server then respond with error: (you already have a more recent version of this list saved locally))
 - How do I deal with writing when the user is offline (should I save last write date with metadata and load whichever is more recent?)
+- Should I limit same ip requests/minute
 
 
 ## Day to day:
