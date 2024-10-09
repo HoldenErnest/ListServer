@@ -12,6 +12,11 @@
 - Should I limit same ip requests/minute
 
 
+## TODO
+- [Create a Link](https://docs.oracle.com/javase/7/docs/api/java/nio/file/Files.html#createLink(java.nio.file.Path,%20java.nio.file.Path)) everytime a user wants to allow another user to his list. (Or just update a file with all paths (this would make it really easy to get all users lists))
+- 
+
+
 ## Day to day:
 
 9/12/2024
