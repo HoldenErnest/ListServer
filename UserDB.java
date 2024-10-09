@@ -143,6 +143,7 @@ public class UserDB {
             FileOutputStream outputStream = new FileOutputStream(f);
             outputStream.write(userByteString);
             outputStream.close();
+            createUserFolder(u.getUsername());
         } else {
             throw new IOException("[FILE] Cannot overwrite: " + Server.getUsersPath() + u.getUsername());
         }
