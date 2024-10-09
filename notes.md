@@ -149,14 +149,14 @@ Connection: {User: "bob", Pass: "sss", Mode: "login", List: "", Host: some.hostn
 Response 200
 Closing connection on a thread
 ```
-### Load List
+### Load List (whats running on the server side)
 ```
 Connection: {User: "bob", Pass: "sss", Mode: "get", List: "newList", Host: some.hostname.com:2001, Content-Len: 0, Received: 0}
 [FILE] Loading File: /ListServer/root/lists/bob/newList.csv
 Response 200
 Closing connection on a thread
 ```
-### Save List
+### Save List (whats running on the server side)
 ```
 Connection: {User: "bob", Pass: "sss", Mode: "save", List: "newList", Host: some.hostname.com:2001, Content-Len: 226, Received: 226}
 [FILE] Writing to file: /ListServer/root/lists/bob/newList.csv
