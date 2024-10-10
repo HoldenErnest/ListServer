@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 
 public class ConnectionParser {
-    private String filePath = ""; // Do I need this?
     private String line = "";
     private String user = "";
     private String pass = "";
@@ -19,6 +18,8 @@ public class ConnectionParser {
     private String data = "";
     private int dataLen = 0;
     private int recievedLen = 0;
+    private int version = -1; // represented as millis since unix epoch
+    private int bversion = -1;
     
     public void parseHeader(BufferedReader in) throws Exception { // returns if the operation succeeded without issue
         parse(in);
@@ -61,6 +62,12 @@ public class ConnectionParser {
                         break;
                     case "Content-Length":
                         dataLen = Integer.parseInt(oValue);
+                        break;
+                    case "Version":
+                        version = Integer.parseInt(oValue);
+                        break;
+                    case "BVersion":
+                        bversion = Integer.parseInt(oValue);
                         break;
                 }
             } catch (Exception e) {
@@ -119,6 +126,12 @@ public class ConnectionParser {
     }
     public byte[] getData() {
         return data.getBytes();
+    }
+    public int getListVersion() {
+        return version;
+    }
+    public int getListBaseVersion() {
+        return bversion;
     }
 
     public String infoString() {

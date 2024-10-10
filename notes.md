@@ -3,18 +3,20 @@
 
 
 ## Things to consider:
-- How do I deal with multiple users writing on the same list
-- Should I require users to login everytime they open the app? (I think no)
-- Should I save/send entire lists or try to find the changes made to a list and send that?
-- Should I try to load lists in chunks so the user can have something to look at while the rest of the list loads?
-- If I load a list once I probably shouldnt reload it when I switch lists and switch back. (With save protocol I can send a date, if this date is more recent than the lists on the server then respond with error: (you already have a more recent version of this list saved locally))
-- How do I deal with writing when the user is offline (should I save last write date with metadata and load whichever is more recent?)
-- Should I limit same ip requests/minute
+- How do I deal with multiple users writing on the same list. **Dissalow a second user to write(lock)**
+- Should I require users to login everytime they open the app? (I think no) **MAYBE**
+- Should I save/send entire lists or try to find the changes made to a list and send that? **Send entire lists**
+- Should I try to load lists in chunks so the user can have something to look at while the rest of the list loads? **no chunking**
+- If I load a list once I probably shouldnt reload it when I switch lists and switch back. **Chashe lists locally, then on each read compare the more recent verison(get write dates from them)**
+- How do I deal with writing when the user is offline **prompt the user which version they want to open(then overwrite either local or server copy)**
+- Should I limit same ip requests/minute **Probably not**
 
 
 ## TODO
 - [Create a Link](https://docs.oracle.com/javase/7/docs/api/java/nio/file/Files.html#createLink(java.nio.file.Path,%20java.nio.file.Path)) everytime a user wants to allow another user to his list. (Or just update a file with all paths (this would make it really easy to get all users lists))
-- 
+- setup Date metadata.. local and remote copies should have a Date so you can compare them ANYTIME the user wants to load a list.
+- Client get a list of all available lists on the server. OR just local if no internet.
+- Client things: fix new list/first list creation. Dont allow switching to another list without saving(or canceling).
 
 
 ## Day to day:

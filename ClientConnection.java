@@ -170,12 +170,12 @@ public abstract class ClientConnection implements Runnable {
     }
     private String getLoadModeInfo(ConnectionParser h) throws Exception {
         String data = "";
-        byte[] listBytes = Server.getList(h.getUsername(), h.getListPath());
+        byte[] listBytes = Server.getList(h.getUsername(), h.getListPath(), h.getListVersion());
         data += new String(listBytes, StandardCharsets.UTF_8);
         return data;
     }
     private String getSaveModeInfo(ConnectionParser h) throws Exception {
-        Server.saveList(h.getUsername(), h.getListPath(), h.getData());
+        Server.saveList(h.getUsername(), h.getListPath(), h.getData(),  h.getListVersion());
 
         return "Successfully Saved List " + h.getListPath();
     }

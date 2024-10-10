@@ -11,6 +11,7 @@ public class ListMetaParser {
     private String owner;
     private String[] readAccess;
     private String[] writeAccess;
+    private int version = -1;
 
     ListMetaParser(byte[] metaFileBytes) {
         readAccess = new String[0];
@@ -38,11 +39,28 @@ public class ListMetaParser {
                 case "write":
                     toWriteList(oValue);
                     break;
+                case "version":
+                    version = Integer.parseInt(oValue);
+                    break;
                 default:
                     break;
             }
           }
           sc.close();
+    }
+
+    public byte[] getBytes() {
+        String metafile = "owner: " + owner + "\nread: "; // + "\nwrite: " + "\nversion: -1"
+        for (String r : readAccess) {
+            metafile += r + " ";
+        }
+        metafile += "\nwrite: ";
+        for (String w : writeAccess) {
+            metafile += w + " ";
+        }
+        metafile += "\nversion: " + version;
+
+        return metafile.getBytes(StandardCharsets.UTF_8);
     }
     private void toReadList(String usersString) {
         readAccess = usersString.split(" ");
@@ -67,5 +85,23 @@ public class ListMetaParser {
     }
     public Boolean isOwner(String username) {
         return username.equals(owner);
+    }
+    public void setVersion(int i) {
+        version = i;
+    }
+    public Boolean olderThan(int version) { // returns if the saved list is strictly Older Than the version that was passed
+        return this.version < version;
+    }
+    public Boolean newerThan(int version) { // returns if the saved list is strictly Newer Than the version that was passed
+        return this.version > version;
+    }
+
+    public Boolean attemptNewVersion(int baseVersion, int newVersion) {
+        if (newVersion <= version) // if the new lists version is <= the current version, you dont need to overwrite.
+            return false;
+        if (baseVersion == version) { // only allow overwriting if it was based off of this version.
+            return true;
+        }
+        return false;
     }
 }

@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="nOQW177BidjiD76-JMUg" name="Page-1">
-        <mxGraphModel dx="2275" dy="802" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="2275" dy="781" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -196,7 +196,7 @@
                 <mxCell id="68" value="Transmission Protocol" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="70" vertex="1">
                     <mxGeometry x="10" y="10" width="140" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="69" value="LUPU / &amp;lt;hostIP&amp;gt;&lt;br&gt;User: &amp;lt;username&amp;gt;&lt;br&gt;Pass: &amp;lt;password&amp;gt;&lt;br&gt;Mode: &amp;lt;'login', 'perms', 'get', 'save'&amp;gt;&lt;br&gt;List: &amp;lt;listPath&amp;gt;?&lt;br&gt;Perms: &amp;lt;permObj&amp;gt;?&lt;br&gt;&amp;lt;DATA&amp;gt;?" style="whiteSpace=wrap;html=1;align=left;verticalAlign=middle;" parent="70" vertex="1">
+                <mxCell id="69" value="LUPU / &amp;lt;hostIP&amp;gt;&lt;br&gt;User: &amp;lt;username&amp;gt;&lt;br&gt;Pass: &amp;lt;password&amp;gt;&lt;br&gt;Mode: &amp;lt;'login', 'perms', 'get', 'save'&amp;gt;&lt;br&gt;List: &amp;lt;listPath&amp;gt;?&lt;br&gt;Perms: &amp;lt;permObj&amp;gt;?&lt;br&gt;Verison: &amp;lt;MillisSinceEpoch&amp;gt;&lt;br&gt;&amp;lt;DATA&amp;gt;?" style="whiteSpace=wrap;html=1;align=left;verticalAlign=middle;" parent="70" vertex="1">
                     <mxGeometry x="20" y="50" width="270" height="270" as="geometry"/>
                 </mxCell>
                 <mxCell id="71" value="" style="group" parent="1" vertex="1" connectable="0">
@@ -211,17 +211,29 @@
                 <mxCell id="74" value="{&lt;br&gt;user: &amp;lt;other username&amp;gt;&lt;br&gt;read: &amp;lt;true, false&amp;gt;&lt;br&gt;write: &amp;lt;true, false&amp;gt;?&lt;br&gt;}" style="whiteSpace=wrap;html=1;align=left;verticalAlign=middle;" parent="71" vertex="1">
                     <mxGeometry x="12.903225806451614" y="38.23529411764706" width="174.19354838709677" height="206.47058823529412" as="geometry"/>
                 </mxCell>
-                <mxCell id="75" value="" style="group" vertex="1" connectable="0" parent="1">
+                <mxCell id="75" value="" style="group" parent="1" vertex="1" connectable="0">
                     <mxGeometry x="-290" y="420" width="200" height="170" as="geometry"/>
                 </mxCell>
-                <mxCell id="76" value="" style="whiteSpace=wrap;html=1;fillColor=#12393B;" vertex="1" parent="75">
+                <mxCell id="76" value="" style="whiteSpace=wrap;html=1;fillColor=#12393B;" parent="75" vertex="1">
                     <mxGeometry width="200" height="170" as="geometry"/>
                 </mxCell>
-                <mxCell id="77" value="List Path" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="75">
+                <mxCell id="77" value="List Path" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="75" vertex="1">
                     <mxGeometry x="15.001612903225809" width="70" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="78" value="&quot;&amp;lt;listname&amp;gt;&quot;&lt;br&gt;or&lt;br&gt;&quot;&amp;lt;otherUser&amp;gt;/&amp;lt;listname&amp;gt;&quot;" style="whiteSpace=wrap;html=1;align=left;verticalAlign=middle;" vertex="1" parent="75">
+                <mxCell id="78" value="&quot;&amp;lt;listname&amp;gt;&quot;&lt;br&gt;or&lt;br&gt;&quot;&amp;lt;otherUser&amp;gt;/&amp;lt;listname&amp;gt;&quot;" style="whiteSpace=wrap;html=1;align=left;verticalAlign=middle;" parent="75" vertex="1">
                     <mxGeometry x="12.903225806451614" y="25" width="174.19354838709677" height="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="79" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="-440" y="650" width="490" height="570" as="geometry"/>
+                </mxCell>
+                <mxCell id="80" value="" style="whiteSpace=wrap;html=1;fillColor=#12393B;" vertex="1" parent="79">
+                    <mxGeometry width="490.00000000000006" height="570" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="List Path" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="79">
+                    <mxGeometry x="36.75395161290323" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="---Server version is v3 (No Offline access)--- Save(list, baseVersion, newVersion)&lt;br&gt;// baseVersion is the last successful get (CAN ONLY BE SERVER VERSION)&lt;br&gt;&lt;br&gt;User1 Get (list, v3(local copy)) // server is v3 so load local&lt;br&gt;User1 Save (list, v3, v4) // server and local are v4&lt;br&gt;&lt;br&gt;User2 Get (list, v3(local copy)) // update local to v4(server)&amp;nbsp;&lt;br&gt;User2 Save (list, v4, v5) // server and local are v5 (since server was v4)&lt;br&gt;&lt;br&gt;// 2 users logged in at the same time:&lt;br&gt;&lt;br&gt;User1 Get (list, v4(local copy)) // local is now v5&lt;br&gt;User2 Get (list, v5(local copy)) // do nothing&lt;br&gt;&lt;br&gt;User1 Save (list, v5, v6.1) // server and local are v6.1&lt;br&gt;User2 Save (list, v5, v6.2) // conflict, baseVersion v5 &amp;lt; server v6.1&lt;br&gt;&lt;br&gt;&lt;br&gt;---Server version is v3 (Offline writing is allowed)---&lt;br&gt;&lt;br&gt;User1 Get(list, v2(local copy))&amp;nbsp; // update local to v3(server)&lt;br&gt;User1 Offline Save(list, v4) // local copy is v4o&lt;br&gt;&lt;br&gt;User2 Get(list, v3(local copy)) // no change&lt;br&gt;User2 Offline Save(list v4) // local is now v4o&lt;br&gt;&lt;br&gt;// if you ever try to save an offline version compare it.&lt;br&gt;&lt;br&gt;User2 Save(list, v4o(local copy)) // Compare local with Server, Merge&lt;br&gt;User1 Save (list, v4o(local copy)) // conflict" style="whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="79">
+                    <mxGeometry x="10" y="30" width="470" height="530" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

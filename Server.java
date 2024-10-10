@@ -45,22 +45,29 @@ public class Server extends ClientConnection {
      * to <b>path</b> could not be loaded.
      */
 
-    public static byte[] getList(String username, String listPath) throws IOException { // listPath should be "username/alist.csv"
+    public static byte[] getList(String username, String listPath, int version) throws IOException { // listPath should be "username/alist.csv"
+        ListMetaParser listMeta = getListMeta(listPath);
+        if (listMeta == null) throw new IOException("NO METADATA FOUND");
         if (!listPath.startsWith(username)) { // this list is from another user..
-            ListMetaParser listMeta = getListMeta(listPath);
             if (listMeta == null || !listMeta.hasReadAccess(username)) throw new IOException("Not allowed read access to this list");
+        }
+        if (!listMeta.newerThan(version)) { // only load if the the saved version is newer (not older or the same)
+            throw new IOException("Version given is older or the same as the stored copy");
         }
         return getBytes(Server.getListsPath() + listPath);
     }
     private static ListMetaParser getListMeta(String listPath) throws IOException { // This takes username/listname
         return new ListMetaParser(getBytes(Server.getListsPath() + listPath + ".meta"));
     }
-    public static void saveList(String username, String listPath, byte[] listBytes) throws IOException {
+    public static void saveList(String username, String listPath, byte[] listBytes, int version) throws IOException {
+        ListMetaParser listMeta = getListMeta(listPath);
+        if (listMeta == null) throw new IOException("NO METADATA FOUND");
         if (!listPath.startsWith(username)) { // this list is from another user..
-            ListMetaParser listMeta = getListMeta(listPath);
-            if (listMeta == null || !listMeta.hasWriteAccess(username)) throw new IOException("Not allowed write access to this list");
+            if (!listMeta.hasWriteAccess(username)) throw new IOException("Not allowed write access to this list");
         }
-        writeListToFile(username, listPath, listBytes, true);
+        if (listMeta.olderThan(version)) { // only write if its a newer version
+            writeListToFile(username, listPath, listBytes, true);
+        } else System.out.println("The given file is older than the saved file.");
     }
 
 
@@ -74,16 +81,16 @@ public class Server extends ClientConnection {
             outputStream.close();
 
             if (length == 0) { // length was 0, meaning it was a newly created list file
-                writeMetaFile(username, listPath, false);
+                newMetaFile(username, listPath, false);
             }
 
         } else {
             throw new IOException("[FILE] Cannot overwrite: " + Server.getListsPath() + listPath);
         }
     }
-    private static void writeMetaFile(String username, String listPath, Boolean overwrite) throws IOException { // only to be called when youre creating new lists (writeListToFile())
+    private static void newMetaFile(String username, String listPath, Boolean overwrite) throws IOException { // only to be called when youre creating new lists (writeListToFile())
         System.out.println("Writing new Metafile for: " + listPath);
-        String metafile = "owner: " + username + "\nread: " + "\nwrite: ";
+        String metafile = "owner: " + username + "\nread: " + "\nwrite: " + "\nversion: -1";
         File f = new File(Server.getListsPath() + listPath + ".meta");
         int length = (int)(f.length());
         if (length == 0 || overwrite) {
@@ -101,11 +108,11 @@ public class Server extends ClientConnection {
         if (length == 0) {
             throw new IOException("File doesnt exist");
         } else {
-            FileInputStream fin = new FileInputStream(f);
-            DataInputStream in = new DataInputStream(fin);
+            DataInputStream in = new DataInputStream(new FileInputStream(f));
 
             byte[] bytecodes = new byte[length];
             in.readFully(bytecodes);
+            in.close();
             return bytecodes;
         }
     }
