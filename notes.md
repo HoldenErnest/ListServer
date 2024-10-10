@@ -171,3 +171,7 @@ Connection: {User: "bob", Pass: "sss", Mode: "save", List: "newList", Host: some
 Response 200
 Closing connection on a thread
 ```
+
+10/10/2024
+- I'm attempting an optimized way to go about versioning (user 1 and 2 open v1: they both make changes, which changes are saved?)
+- Using a combination of BaseVersions, ServerVersion, and NewVersion I can accuratly find when there will be conflict errors. In which case I will be able to use `listB.filter(item => !listA.includes(item));` with listB and listA items being each listItem from a list.
