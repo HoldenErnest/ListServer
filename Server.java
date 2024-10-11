@@ -45,29 +45,45 @@ public class Server extends ClientConnection {
      * to <b>path</b> could not be loaded.
      */
 
-    public static byte[] getList(String username, String listPath, int version) throws IOException { // listPath should be "username/alist.csv"
+    public static byte[] getList(ConnectionParser connection, Response res) throws Exception { // listPath should be "username/alist.csv"
+        String username = connection.getUsername();
+        String listPath = connection.getListPath();
+        int version = connection.getListVersion();
+        int bversion = connection.getListBaseVersion();
+
         ListMetaParser listMeta = getListMeta(listPath);
         if (listMeta == null) throw new IOException("NO METADATA FOUND");
         if (!listPath.startsWith(username)) { // this list is from another user..
             if (listMeta == null || !listMeta.hasReadAccess(username)) throw new IOException("Not allowed read access to this list");
         }
-        if (!listMeta.newerThan(version)) { // only load if the the saved version is newer (not older or the same)
-            throw new IOException("Version given is older or the same as the stored copy");
+        if (listMeta.olderThanSameAs(version)) { // the clients files is more recent than the remote file
+            throw new IOException("Local File is Newer");
         }
+        res.setVersion(listMeta.getVersion());
         return getBytes(Server.getListsPath() + listPath);
     }
     private static ListMetaParser getListMeta(String listPath) throws IOException { // This takes username/listname
         return new ListMetaParser(getBytes(Server.getListsPath() + listPath + ".meta"));
     }
-    public static void saveList(String username, String listPath, byte[] listBytes, int version) throws IOException {
+    public static void saveList(ConnectionParser cp, Response res) throws Exception {
+        String username = cp.getUsername();
+        String listPath = cp.getListPath();
+        byte[] listBytes = cp.getData();
+        int baseVersion = cp.getListBaseVersion();
         ListMetaParser listMeta = getListMeta(listPath);
-        if (listMeta == null) throw new IOException("NO METADATA FOUND");
         if (!listPath.startsWith(username)) { // this list is from another user..
-            if (!listMeta.hasWriteAccess(username)) throw new IOException("Not allowed write access to this list");
+            if (listMeta == null || !listMeta.hasWriteAccess(username)) throw new IOException("Not allowed write access to this list");
         }
-        if (listMeta.olderThan(version)) { // only write if its a newer version
+        if (listMeta.sameVersion(baseVersion)) { // only write if its a newer version
             writeListToFile(username, listPath, listBytes, true);
-        } else System.out.println("The given file is older than the saved file.");
+            writeMetaFile(listMeta, listPath);
+            res.setStatus(200);
+        } else { // the file attempting to get saved is based off a different list
+            System.out.println("CONFLICTING SAVE");
+            res.setStatus(300);
+            String data = new String(getList(cp, res), StandardCharsets.UTF_8);
+            res.setData(data);
+        }
     }
 
 
@@ -99,6 +115,13 @@ public class Server extends ClientConnection {
             outputStream.write(metafile.getBytes(StandardCharsets.UTF_8));
             outputStream.close();
         }
+    }
+    private static void writeMetaFile(ListMetaParser lmp, String listPath) throws IOException {
+        System.out.println("SAVE META: " + Server.getListsPath() + listPath + ".meta");
+        File f = new File(Server.getListsPath() + listPath + ".meta");
+        FileOutputStream outputStream = new FileOutputStream(f);
+        outputStream.write(lmp.getBytes());
+        outputStream.close();
     }
     private static byte[] getBytes(String path) throws IOException { // Read a certain file from the docroot // this takes /home/absolute/path/to/file
         

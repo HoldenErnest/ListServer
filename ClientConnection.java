@@ -80,13 +80,13 @@ public abstract class ClientConnection implements Runnable {
                 log("Connection success at " + senderIP + " INFO: " + header.infoString());
                 // The metadata for the packet was collected so now do stuff with it.
 
-                String sendString = getInfo(header);
+                Response sender = getInfo(header);
 
                 // The information to send back has been gathered, so send it.
 
                 try {
-                    writeHeaderToSocket(out, sendString.length());
-                    writeTextToSocket(out, sendString);
+                    writeHeaderToSocket(out, sender);
+                    writeTextToSocket(out, sender);
 
                     //byte[] data = getBytes(header.getPath());  // write back file if it was requested
                     //writeBytesToSocket(rawOut,data);
@@ -125,14 +125,15 @@ public abstract class ClientConnection implements Runnable {
         out.println("Received Bad Info: " + m + "\r\n\r\n");
         out.flush();
     }
-    private void writeHeaderToSocket(PrintWriter out, int cl) {
-        out.print("HTTP/1.0 200 OK\r\n");
-        out.print("Content-Length: " + cl + "\r\n");
-        out.print("Content-Type: text/html\r\n\r\n");
+    private void writeHeaderToSocket(PrintWriter out, Response r) {
+        out.print("HTTP/1.0 "+r.getStatus()+" OK\r\n");
+        out.print("Content-Length: " + r.getData().length() + "\r\n");
+        out.print("Content-Type: text/html\r\n");
+        out.print("Version: "+r.getVersion()+"\r\n\r\n");
         out.flush();
     }
-    private void writeTextToSocket(PrintWriter out, String s) {
-        out.print(s);
+    private void writeTextToSocket(PrintWriter out, Response sender) {
+        out.print(sender.getData());
         out.flush();
     }
     private void writeBytesToSocket(OutputStream out, byte[] data) throws IOException {
@@ -141,43 +142,38 @@ public abstract class ClientConnection implements Runnable {
     }
 
     // One of the most important methods, from the header info return whatever you need to send as a string
-    private String getInfo(ConnectionParser h) throws Exception {
-        String builder = "";
+    private Response getInfo(ConnectionParser h) throws Exception {
+        Response builder = new Response();
 
         switch (h.getMode()) {
             case "login": // test if login Username and Password is in DB
-                builder += getLoginModeInfo(h);
+                getLoginModeInfo(h, builder);
                 break;
             case "get": // load and send a list specified by the user
-                builder += getLoadModeInfo(h);
+                getLoadModeInfo(h, builder);
                 break;
             case "list": // give a list of all Available Lists to the user.
-                builder += "This mode is depricated / not implimented";
+                //"This mode is depricated / not implimented";
                 break;
             case "save": // attempt to save a list to this server, on fail, it will be reported.
-                builder += getSaveModeInfo(h);
+                getSaveModeInfo(h, builder);
                 break;
             default:
-                break;
-        }
-        if (builder.length() == 0) {
-            throw new Exception("Invalid Received Mode");
+                throw new Exception("Invalid Received Mode");
         }
         return builder;
     }
-    private String getLoginModeInfo(ConnectionParser h) throws Exception {
-        return "HasUser: true\n";
+    private void getLoginModeInfo(ConnectionParser h, Response res) throws Exception {
+        res.setData("200 HasUser: true\n");
     }
-    private String getLoadModeInfo(ConnectionParser h) throws Exception {
-        String data = "";
-        byte[] listBytes = Server.getList(h.getUsername(), h.getListPath(), h.getListVersion());
-        data += new String(listBytes, StandardCharsets.UTF_8);
-        return data;
+    private void getLoadModeInfo(ConnectionParser h, Response res) throws Exception {
+        byte[] listBytes = Server.getList(h, res);
+        res.setData(new String(listBytes, StandardCharsets.UTF_8)); // begins with 200 or 300
     }
-    private String getSaveModeInfo(ConnectionParser h) throws Exception {
-        Server.saveList(h.getUsername(), h.getListPath(), h.getData(),  h.getListVersion());
+    private void getSaveModeInfo(ConnectionParser h, Response res) throws Exception {
+        Server.saveList(h, res);
 
-        return "Successfully Saved List " + h.getListPath();
+        res.setData("Successfully Saved List " + h.getListPath());
     }
 
     // END MODES ---------------------------------------------------------------------------

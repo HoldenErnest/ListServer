@@ -134,6 +134,7 @@ public class ConnectionParser {
         return bversion;
     }
 
+
     public String infoString() {
        return String.format("{User: \"%s\", Pass: \"%s\", Mode: \"%s\", List: \"%s\", Host: %s, Content-Len: %s, Received: %s}", user, pass, mode, listID, host, dataLen, recievedLen);
     }

@@ -89,19 +89,16 @@ public class ListMetaParser {
     public void setVersion(int i) {
         version = i;
     }
-    public Boolean olderThan(int version) { // returns if the saved list is strictly Older Than the version that was passed
-        return this.version < version;
+    public Boolean olderThanSameAs(int version) { // returns if the saved list is strictly Older Than the version that was passed
+        return this.version <= version;
     }
     public Boolean newerThan(int version) { // returns if the saved list is strictly Newer Than the version that was passed
         return this.version > version;
     }
-
-    public Boolean attemptNewVersion(int baseVersion, int newVersion) {
-        if (newVersion <= version) // if the new lists version is <= the current version, you dont need to overwrite.
-            return false;
-        if (baseVersion == version) { // only allow overwriting if it was based off of this version.
-            return true;
-        }
-        return false;
+    public Boolean sameVersion(int version) {
+        return this.version == version;
+    }
+    public int getVersion() {
+        return version;
     }
 }
