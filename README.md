@@ -6,6 +6,7 @@ Read [notes](notes.md) for more information on startup of the System as a whole
 ## Setup
 - Clone the repo
 - Install Java JDK
+- Get an SSL Cert and transfer it into a java keystore
 - Find all files to compile `find -name "*.java" > compileIt.txt`
 - Compile them `javac @compileIt.txt`
 
