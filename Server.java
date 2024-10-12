@@ -45,20 +45,20 @@ public class Server extends ClientConnection {
      * to <b>path</b> could not be loaded.
      */
 
-    public static byte[] getList(ConnectionParser connection, Response res) throws Exception { // listPath should be "username/alist.csv"
+    public static byte[] getList(ConnectionParser connection, Response res, Boolean versionCare) throws Exception { // listPath should be "username/alist.csv"
         String username = connection.getUsername();
         String listPath = connection.getListPath();
         int version = connection.getListVersion();
-        int bversion = connection.getListBaseVersion();
 
         ListMetaParser listMeta = getListMeta(listPath);
         if (listMeta == null) throw new IOException("NO METADATA FOUND");
         if (!listPath.startsWith(username)) { // this list is from another user..
             if (listMeta == null || !listMeta.hasReadAccess(username)) throw new IOException("Not allowed read access to this list");
         }
-        if (listMeta.olderThanSameAs(version)) { // the clients files is more recent than the remote file
+        if (listMeta.olderThanSameAs(version) && versionCare) { // the clients files is more recent than the remote file
+            System.out.println("cant send: " + listMeta.getVersion() + " <= " + version);
             throw new IOException("Local File is Newer");
-        }
+        } 
         res.setVersion(listMeta.getVersion());
         return getBytes(Server.getListsPath() + listPath);
     }
@@ -69,19 +69,31 @@ public class Server extends ClientConnection {
         String username = cp.getUsername();
         String listPath = cp.getListPath();
         byte[] listBytes = cp.getData();
-        int baseVersion = cp.getListBaseVersion();
-        ListMetaParser listMeta = getListMeta(listPath);
+        int version = cp.getListVersion();
+        ListMetaParser listMeta = null;
+        try {
+            listMeta = getListMeta(listPath);
+        } catch(Exception e) {}
         if (!listPath.startsWith(username)) { // this list is from another user..
             if (listMeta == null || !listMeta.hasWriteAccess(username)) throw new IOException("Not allowed write access to this list");
         }
-        if (listMeta.sameVersion(baseVersion)) { // only write if its a newer version
+        
+        if (listMeta == null || listMeta.sameVersion(version)) { // only write if its a newer version OR this is a new file
             writeListToFile(username, listPath, listBytes, true);
+            if (listMeta == null) { // if there is no metafile that means you need to make a new one
+                newMetaFile(username, listPath, true);
+                listMeta = getListMeta(listPath);
+            }
+            listMeta.setVersion(version+1);
             writeMetaFile(listMeta, listPath);
+            res.setVersion(version+1);
             res.setStatus(200);
+            res.setData("Successfully Saved List: " + listPath);
         } else { // the file attempting to get saved is based off a different list
-            System.out.println("CONFLICTING SAVE");
+            System.out.println("CONFLICTING SAVE, sending old list data");
             res.setStatus(300);
-            String data = new String(getList(cp, res), StandardCharsets.UTF_8);
+            String data = "";
+            data = new String(getList(cp, res,false), StandardCharsets.UTF_8);
             res.setData(data);
         }
     }
@@ -106,7 +118,7 @@ public class Server extends ClientConnection {
     }
     private static void newMetaFile(String username, String listPath, Boolean overwrite) throws IOException { // only to be called when youre creating new lists (writeListToFile())
         System.out.println("Writing new Metafile for: " + listPath);
-        String metafile = "owner: " + username + "\nread: " + "\nwrite: " + "\nversion: -1";
+        String metafile = "owner: " + username + "\nread: " + "\nwrite: " + "\nversion: 0";
         File f = new File(Server.getListsPath() + listPath + ".meta");
         int length = (int)(f.length());
         if (length == 0 || overwrite) {

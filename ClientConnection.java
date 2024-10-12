@@ -167,13 +167,12 @@ public abstract class ClientConnection implements Runnable {
         res.setData("200 HasUser: true\n");
     }
     private void getLoadModeInfo(ConnectionParser h, Response res) throws Exception {
-        byte[] listBytes = Server.getList(h, res);
+        byte[] listBytes = Server.getList(h, res,true);
         res.setData(new String(listBytes, StandardCharsets.UTF_8)); // begins with 200 or 300
     }
     private void getSaveModeInfo(ConnectionParser h, Response res) throws Exception {
         Server.saveList(h, res);
-
-        res.setData("Successfully Saved List " + h.getListPath());
+        //data could be set inside the chain.
     }
 
     // END MODES ---------------------------------------------------------------------------

@@ -19,7 +19,6 @@ public class ConnectionParser {
     private int dataLen = 0;
     private int recievedLen = 0;
     private int version = -1; // represented as millis since unix epoch
-    private int bversion = -1;
     
     public void parseHeader(BufferedReader in) throws Exception { // returns if the operation succeeded without issue
         parse(in);
@@ -65,9 +64,6 @@ public class ConnectionParser {
                         break;
                     case "Version":
                         version = Integer.parseInt(oValue);
-                        break;
-                    case "BVersion":
-                        bversion = Integer.parseInt(oValue);
                         break;
                 }
             } catch (Exception e) {
@@ -130,12 +126,9 @@ public class ConnectionParser {
     public int getListVersion() {
         return version;
     }
-    public int getListBaseVersion() {
-        return bversion;
-    }
 
 
     public String infoString() {
-       return String.format("{User: \"%s\", Pass: \"%s\", Mode: \"%s\", List: \"%s\", Host: %s, Content-Len: %s, Received: %s}", user, pass, mode, listID, host, dataLen, recievedLen);
+       return String.format("{User: \"%s\", Mode: \"%s\", List: \"%s\", Host: %s, Content-Len: %s, Received: %s}", user, mode, listID, host, dataLen, recievedLen);
     }
 } 
