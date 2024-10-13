@@ -152,8 +152,8 @@ public abstract class ClientConnection implements Runnable {
             case "get": // load and send a list specified by the user
                 getLoadModeInfo(h, builder);
                 break;
-            case "list": // give a list of all Available Lists to the user.
-                //"This mode is depricated / not implimented";
+            case "lists": // give a list of all Available Lists to the user.
+                getAllLists(h, builder);
                 break;
             case "save": // attempt to save a list to this server, on fail, it will be reported.
                 getSaveModeInfo(h, builder);
@@ -173,6 +173,9 @@ public abstract class ClientConnection implements Runnable {
     private void getSaveModeInfo(ConnectionParser h, Response res) throws Exception {
         Server.saveList(h, res);
         //data could be set inside the chain.
+    }
+    private void getAllLists(ConnectionParser h, Response res) throws Exception{
+        Server.getAllLists(h,res);
     }
 
     // END MODES ---------------------------------------------------------------------------

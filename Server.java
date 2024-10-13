@@ -36,15 +36,6 @@ public class Server extends ClientConnection {
         Server.docroot = docroot;
     }
 
-    /**
-     * Returns an array of bytes containing the bytes for
-     * the file represented by the argument <b>path</b>.
-     *
-     * @return the bytes for the file
-     * @exception FileNotFoundException if the file corresponding
-     * to <b>path</b> could not be loaded.
-     */
-
     public static byte[] getList(ConnectionParser connection, Response res, Boolean versionCare) throws Exception { // listPath should be "username/alist.csv"
         String username = connection.getUsername();
         String listPath = connection.getListPath();
@@ -61,9 +52,6 @@ public class Server extends ClientConnection {
         } 
         res.setVersion(listMeta.getVersion());
         return getBytes(Server.getListsPath() + listPath);
-    }
-    private static ListMetaParser getListMeta(String listPath) throws IOException { // This takes username/listname
-        return new ListMetaParser(getBytes(Server.getListsPath() + listPath + ".meta"));
     }
     public static void saveList(ConnectionParser cp, Response res) throws Exception {
         String username = cp.getUsername();
@@ -97,8 +85,25 @@ public class Server extends ClientConnection {
             res.setData(data);
         }
     }
+    public static void getAllLists(ConnectionParser cp, Response res) throws Exception {
+        File folder = new File(Server.getListsPath() + cp.getUsername());
+        String allFiles;
+        allFiles = listAllCSVInFolder(folder); // can throw exception but really it shouldnt, either theres nothing in these folders = "" or there are things in that folder -_-
+        res.setData(allFiles);
+    }
 
-
+    private static String listAllCSVInFolder(File folder) throws Exception {
+        String allFiles = "";
+        for (final File fileEntry : folder.listFiles()) {
+            if (fileEntry.getName().endsWith(".csv")) {
+                allFiles += fileEntry.getName().substring(0,fileEntry.getName().length()-4) + " ";
+            }
+        }
+        return allFiles;
+    }
+    private static ListMetaParser getListMeta(String listPath) throws IOException { // This takes username/listname
+        return new ListMetaParser(getBytes(Server.getListsPath() + listPath + ".meta"));
+    }
     private static void writeListToFile(String username, String listPath, byte[] listByteString, Boolean overwrite) throws IOException { // Use saveList(), dont call this directly (for user checking reasons)
         File f = new File(Server.getListsPath() + listPath);
         int length = (int)(f.length());
@@ -151,6 +156,8 @@ public class Server extends ClientConnection {
             return bytecodes;
         }
     }
+    
+    
     public static void main(String args[]) {
         cin = new Scanner(System.in);
         // "Start as: java Server port docroot TLS"

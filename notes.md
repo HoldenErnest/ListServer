@@ -16,7 +16,9 @@
 - [Create a Link](https://docs.oracle.com/javase/7/docs/api/java/nio/file/Files.html#createLink(java.nio.file.Path,%20java.nio.file.Path)) everytime a user wants to allow another user to his list. (Or just update a file with all paths (this would make it really easy to get all users lists))
 - setup Date metadata.. local and remote copies should have a Date so you can compare them ANYTIME the user wants to load a list.
 - Client get a list of all available lists on the server. OR just local if no internet.
-- Client things: fix new list/first list creation. Dont allow switching to another list without saving(or canceling).
+- Client things: fix new list/first list creation. Dont allow switching to another list without saving(or canceling). ListItem creation dies forever on list switch.
+- Server, PERMS CLI
+- MLOCK things like log
 
 
 ## Day to day:
@@ -175,3 +177,10 @@ Closing connection on a thread
 10/10/2024
 - I'm attempting an optimized way to go about versioning (user 1 and 2 open v1: they both make changes, which changes are saved?)
 - Using a combination of BaseVersions, ServerVersion, and NewVersion I can accuratly find when there will be conflict errors. In which case I will be able to use `listB.filter(item => !listA.includes(item));` with listB and listA items being each listItem from a list.
+
+10/13/2024
+- Past few days I worked on Versioning. Believe its done, should probably make unit tests for it though.
+- I still how to work out how I actually want to deal with the conflicts as I mentioned previously, but at least the system is in place for the user to access/eventually compare the two versions.
+- I should make a few more modifications to the client list, some QOL features are missing like removing lists
+- I should make a CLI for perms, once thats in place I can have users send a Permissions change request, which can allow others read/write access.
+- I can put in/take out [hard links](https://docs.oracle.com/javase/7/docs/api/java/nio/file/Files.html#createLink(java.nio.file.Path,%20java.nio.file.Path)) when a permission pertaining to a specific user is changed.(this way the users available lists will automatically update)
