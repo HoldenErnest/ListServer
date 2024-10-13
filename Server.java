@@ -74,7 +74,7 @@ public class Server extends ClientConnection {
             }
             listMeta.setVersion(version+1);
             writeMetaFile(listMeta, listPath);
-            res.setVersion(version+1);
+            res.setVersion(version+1); // Successful save, increase its version by 1
             res.setStatus(200);
             res.setData("Successfully Saved List: " + listPath);
         } else { // the file attempting to get saved is based off a different list
@@ -83,6 +83,7 @@ public class Server extends ClientConnection {
             String data = "";
             data = new String(getList(cp, res,false), StandardCharsets.UTF_8);
             res.setData(data);
+            res.setVersion(version);
         }
     }
     public static void getAllLists(ConnectionParser cp, Response res) throws Exception {
