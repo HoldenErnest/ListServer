@@ -184,3 +184,30 @@ Closing connection on a thread
 - I should make a few more modifications to the client list, some QOL features are missing like removing lists
 - I should make a CLI for perms, once thats in place I can have users send a Permissions change request, which can allow others read/write access.
 - I can put in/take out [hard links](https://docs.oracle.com/javase/7/docs/api/java/nio/file/Files.html#createLink(java.nio.file.Path,%20java.nio.file.Path)) when a permission pertaining to a specific user is changed.(this way the users available lists will automatically update)
+
+### Versioning
+```
+baseVersion is updated on a client WHEN:
+  1. a get request is successful, then set it to what the server was.
+  2. a save is successful (set to whatever the response version is)
+  3. a merge is settled, then set it to what the server was.
+
+Client: save
+Server:
+  if baseVer != remoteVer respond conflict (300: + send list)
+  On conflict.. Client: read list: send to compare / make new list
+  On conflict.. Client: save the merged list, baseVer = RemoteVer
+
+Client: get
+Server:
+  if cachedVer >= remoteVer dont load (cashed list is more recent)
+
+On every 200 get: Client baseVer = remoteVer.
+On every 300: compare lists, save resulting merge.
+```
+
+10/15/2024
+- I decided to deal with conflics by just trashing the local changes, and loading the remote version.
+- This is more simplistic and will overall be easier on the user.
+- I also worked on getting notifications working. I'm not sure it looks quite right right now but I like the functionality
+- I should do either unit testing or extensive manual testing to ensure no problems before release
