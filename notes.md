@@ -211,3 +211,10 @@ On every 300: compare lists, save resulting merge.
 - This is more simplistic and will overall be easier on the user.
 - I also worked on getting notifications working. I'm not sure it looks quite right right now but I like the functionality
 - I should do either unit testing or extensive manual testing to ensure no problems before release
+
+10/16/2024
+- Guess it really is the 16th now.
+- Added a CLI for permissions. `Enter: <Username>/<Listname> <Username> <2/1/0(rw/r/-)>: `
+- Worked on Hardlinks, they should be in place. Theoretically the hardlinks make it easy and foolproof to use only the lists allowed to you.
+- You can technically have a list named `user.listname` but it wont belong to another user, the server doesnt care who it belongs to when its created, if you try to write to anything pre-existing it checks the metadata, which is always copied when you make a hardlink.
+- 1144(Server) + 1055(Client) = 2199(Total)

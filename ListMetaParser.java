@@ -83,6 +83,60 @@ public class ListMetaParser {
         }
         return false;
     }
+    public Boolean removePermissions(String user) { // returns whether a change was made.
+        removeRead(user);
+        return true;
+    }
+    private void removeWrite(String user) {
+        if (hasWriteAccess(user)) {
+            String[] newWriteArr = new String[writeAccess.length - 1];
+            int offset = 0;
+            for (int i = 0; i < writeAccess.length; i++) {
+                if (!writeAccess[i].equals(user)) {
+                    newWriteArr[i-offset] = writeAccess[i];
+                    offset++;
+                }
+            }
+            writeAccess = newWriteArr;
+        }
+    }
+    private void removeRead(String user) {
+        if (hasReadAccess(user)) {
+            String[] newReadArr = new String[readAccess.length - 1];
+            int offset = 0;
+            for (int i = 0; i < readAccess.length; i++) {
+                if (!readAccess[i].equals(user)) {
+                    newReadArr[i-offset] = readAccess[i];
+                    offset++;
+                }
+            }
+            readAccess = newReadArr;
+        }
+        removeWrite(user);
+    }
+    public Boolean tryAllowWrite(String user) { // returns if the list changed
+        if (hasWriteAccess(user)) return false;
+        String[] newWriteArr = new String[writeAccess.length + 1];
+        for (int i = 0; i < writeAccess.length; i++) {
+            newWriteArr[i] = writeAccess[i];
+        }
+        newWriteArr[newWriteArr.length-1] = user;
+        writeAccess = newWriteArr;
+        tryAllowRead(user, true);
+        return true;
+    }
+    public Boolean tryAllowRead(String user, Boolean hasWrite) { // returns if the list changed
+        if (!hasReadAccess(user)) {
+            String[] newReadArr = new String[readAccess.length + 1];
+            for (int i = 0; i < readAccess.length; i++) {
+                newReadArr[i] = readAccess[i];
+            }
+            newReadArr[newReadArr.length-1] = user;
+            readAccess = newReadArr;
+        }
+        if (!hasWrite) removeWrite(user); // if you set a guy to read you might want to remove write.
+        return true;
+    }
     public Boolean isOwner(String username) {
         return username.equals(owner);
     }

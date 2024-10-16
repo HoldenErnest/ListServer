@@ -9,6 +9,9 @@
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.KeyStore;
 import javax.net.*;
 import javax.net.ssl.*;
@@ -43,8 +46,8 @@ public class Server extends ClientConnection {
 
         ListMetaParser listMeta = getListMeta(listPath);
         if (listMeta == null) throw new IOException("NO METADATA FOUND");
-        if (!listPath.startsWith(username)) { // this list is from another user..
-            if (listMeta == null || !listMeta.hasReadAccess(username)) throw new IOException("Not allowed read access to this list");
+        if (!listMeta.isOwner(username)) { // this list is from another user..
+            if (!listMeta.hasReadAccess(username)) throw new IOException("Not allowed read access to this list");
         }
         if (listMeta.olderThanSameAs(version) && versionCare) { // the clients files is more recent than the remote file
             System.out.println("cant send: " + listMeta.getVersion() + " <= " + version);
@@ -62,16 +65,23 @@ public class Server extends ClientConnection {
         try {
             listMeta = getListMeta(listPath);
         } catch(Exception e) {}
-        if (!listPath.startsWith(username)) { // this list is from another user..
-            if (listMeta == null || !listMeta.hasWriteAccess(username)) throw new IOException("Not allowed write access to this list");
+
+        if (listMeta == null) { // if there is no metafile that means you need to make a new one
+            newMetaFile(username, listPath, true);
+            listMeta = getListMeta(listPath);
+        }
+
+        if (!listMeta.isOwner(username)) { // this list is from another user..
+            if (!listMeta.hasWriteAccess(username)) {
+                res.setStatus(301);
+                String data = new String(getList(cp, res,false), StandardCharsets.UTF_8); // attempt to read the list instead, if no permissions THEN it will error 400
+                res.setData(data);
+                return;
+            }
         }
         
         if (listMeta == null || listMeta.sameVersion(version)) { // only write if its a newer version OR this is a new file
             writeListToFile(username, listPath, listBytes, true);
-            if (listMeta == null) { // if there is no metafile that means you need to make a new one
-                newMetaFile(username, listPath, true);
-                listMeta = getListMeta(listPath);
-            }
             listMeta.setVersion(version+1);
             writeMetaFile(listMeta, listPath);
             res.setVersion(version+1); // Successful save, increase its version by 1
@@ -195,6 +205,9 @@ public class Server extends ClientConnection {
                     case "user get":
                         tryGetUser();
                         break;
+                    case "permissions":
+                        permSetCLI();
+                        break;
                     default:
                         System.out.println("Unrecognized command '" + command + "'. Type 'help' see all commands or 'stop' to terminate server");
                         break;
@@ -236,6 +249,85 @@ public class Server extends ClientConnection {
             return ServerSocketFactory.getDefault();
         }
         return null;
+    }
+
+    public static void permissionSet(String listPath, String user, int rw) { // create a hardlink for a user to another users list and metadata. (rw: 2=r/w, 1=r, 0=none) EX: "user/list user2 2"
+        //make sure the list exists
+        ListMetaParser lmp = null;
+        try {
+            lmp = getListMeta(listPath);
+        } catch (Exception e) {
+            System.out.println("list does not exist");
+            return;
+        }
+        Boolean hadChange = false;
+        //edit the metadata there
+        if (rw == 2) {
+            hadChange = lmp.tryAllowWrite(user);
+        } else if (rw == 1) {
+            hadChange = lmp.tryAllowRead(user, false);
+        } else {
+            hadChange = lmp.removePermissions(user);
+            removeHardLink(listPath, user);
+        }
+        try {
+            if (hadChange)
+                writeMetaFile(lmp, listPath);
+        } catch (Exception e) {
+            System.out.println("Problem writing metafile");
+            return;
+        }
+        //make/remove hardlink if neccessary on the user side
+        createHardLink(listPath, user);
+    }
+    private static void permSetCLI() { // CLI
+        System.out.print("Enter: <Username>/<Listname> <Username> <2/1/0(rw/r/-)>: ");
+        String input = cin.nextLine();
+        if (assertBadEntry(input.length() == 0)) return;
+        int sp = input.indexOf(" ");
+        int sp2 = input.lastIndexOf(" ");
+        if (assertBadEntry(sp == -1 || sp2 == sp)) return;
+        String listPath = input.substring(0,sp);
+        String user = input.substring(sp+1,sp2);
+        int rw = Integer.parseInt(input.substring(sp2+1));
+
+        permissionSet(listPath+".csv", user, rw);
+    }
+
+    private static void createHardLink(String listPath, String user) { // link from a list to another users directory
+        try {
+            String path1 = getListsPath() + File.separator + listPath;
+            String path2 = getListsPath() + File.separator + user + File.separator + listPath.replaceAll("/", ".");
+            Path targetFile = Paths.get(path1);
+            Path linkPath = Paths.get(path2);
+            if (Files.exists(linkPath)) return; // if this already exists, dont overwrite anything. THIS COULD BE A NON-LINK(user owns the list), WHICH IS FINE
+            Files.createLink(linkPath, targetFile);
+            targetFile = Paths.get(path1 + ".meta");
+            linkPath = Paths.get(path2 + ".meta");
+            if (Files.exists(linkPath)) Files.delete(linkPath); // if the list link didnt exist but the meta does, remove this meta (it could have the incorrect permissions)
+            Files.createLink(linkPath, targetFile);
+            System.out.println("Hard link created successfully!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private static void removeHardLink(String listPath, String user) {
+        String path = getListsPath() + File.separator + user + File.separator + listPath.replaceAll("/", ".");
+        File file = new File(path);
+        if (file.exists()) {
+            if (file.delete()) {
+                System.out.println("Hard link removed successfully.");
+            } else {
+                System.out.println("Failed to remove hard link.");
+            }
+        } else {
+            System.out.println("File does not exist.");
+        }
+        file = new File(path + ".meta");
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
     private static void tryMakeUser() {
