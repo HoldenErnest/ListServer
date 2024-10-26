@@ -25,7 +25,7 @@ public class ConnectionParser {
     }
 
     private void parse(BufferedReader in) throws Exception { // Technically I want to make it differ from HTTP so that it cant be mistakenly accessed 
-        
+        // 'in' should read things in dynamically so if someone has a bad headder it will immediatly quit without reading the password
         // Read in the first line to make sure its a good connection
         line = in.readLine();
         if (!line.startsWith("LUPU /")) {
@@ -72,6 +72,9 @@ public class ConnectionParser {
             
         } while (!(line = in.readLine()).equals(""));
 
+        // after the header check the user immediatly, if its bad, dont bother reading the data.
+        if (!UserDB.hasUser(getUsername(), getPassword().toCharArray())) throw new Exception("Invalid User");
+
         // READ THE BODY SEPERATLY (if there is body to read)
         if (dataLen > 0) {
             int readChars = 0;
@@ -89,8 +92,6 @@ public class ConnectionParser {
         if (recievedLen < dataLen) {
             throw new Exception("Not all Data could be read");
         }
-
-        if (!UserDB.hasUser(getUsername(), getPassword().toCharArray())) throw new Exception("Invalid User");
     }
 
     public String getListPath() throws Exception {

@@ -218,3 +218,8 @@ On every 300: compare lists, save resulting merge.
 - Worked on Hardlinks, they should be in place. Theoretically the hardlinks make it easy and foolproof to use only the lists allowed to you.
 - You can technically have a list named `user.listname` but it wont belong to another user, the server doesnt care who it belongs to when its created, if you try to write to anything pre-existing it checks the metadata, which is always copied when you make a hardlink.
 - 1144(Server) + 1055(Client) = 2199(Total)
+
+10/26/2024
+- I've been fixing a few client things in between now and then.
+- Added notifications, fixed multiple client bugs (read the commits/todo for my List repo)
+- potential optimization on server, if the user doesnt have the correct Username and Password, IMMEDIATLY close the connection. This way we dont waste cpu time reading whatever data they mightve sent with the request.
