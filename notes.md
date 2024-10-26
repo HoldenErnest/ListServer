@@ -223,3 +223,5 @@ On every 300: compare lists, save resulting merge.
 - I've been fixing a few client things in between now and then.
 - Added notifications, fixed multiple client bugs (read the commits/todo for my List repo)
 - potential optimization on server, if the user doesnt have the correct Username and Password, IMMEDIATLY close the connection. This way we dont waste cpu time reading whatever data they mightve sent with the request.
+- refactored client windows, added settings window option
+- lists load from cached version first(ALWAYS), if its ever loaded from the server it means you were out of date, in which a notification is pushed to you
