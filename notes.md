@@ -225,3 +225,7 @@ On every 300: compare lists, save resulting merge.
 - potential optimization on server, if the user doesnt have the correct Username and Password, IMMEDIATLY close the connection. This way we dont waste cpu time reading whatever data they mightve sent with the request.
 - refactored client windows, added settings window option
 - lists load from cached version first(ALWAYS), if its ever loaded from the server it means you were out of date, in which a notification is pushed to you
+
+11/4/2024
+- I've continued working on client side settings for a bit. Its pretty much done, just want to polish some things up before release still
+- I'm testing making a build for linux since my user is switching platforms. Doing the things mentioned [here](https://www.electronforge.io/guides/developing-with-wsl) I can get npm running on it. (I also tried [this versioning tool](https://github.com/nvm-sh/nvm) but im unsure if thats what made it work)
