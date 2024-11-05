@@ -229,3 +229,4 @@ On every 300: compare lists, save resulting merge.
 11/4/2024
 - I've continued working on client side settings for a bit. Its pretty much done, just want to polish some things up before release still
 - I'm testing making a build for linux since my user is switching platforms. Doing the things mentioned [here](https://www.electronforge.io/guides/developing-with-wsl) I can get npm running on it. (I also tried [this versioning tool](https://github.com/nvm-sh/nvm) but im unsure if thats what made it work)
+- check [these](https://www.electronjs.org/docs/latest/development/build-instructions-linux/) build instructions as well
