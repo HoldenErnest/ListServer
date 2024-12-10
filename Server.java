@@ -79,7 +79,6 @@ public class Server extends ClientConnection {
                 return;
             }
         }
-        
         if (listMeta == null || listMeta.sameVersion(version)) { // only write if its a newer version OR this is a new file
             writeListToFile(username, listPath, listBytes, true);
             listMeta.setVersion(version+1);
@@ -93,7 +92,7 @@ public class Server extends ClientConnection {
             String data = "";
             data = new String(getList(cp, res,false), StandardCharsets.UTF_8);
             res.setData(data);
-            res.setVersion(version);
+            res.setVersion(listMeta.getVersion());
         }
     }
     public static void getAllLists(ConnectionParser cp, Response res) throws Exception {
